@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/Wesztman/mkdocs-azure-pipelines/assets/54413402/5d0e50ea-843a-4e63-8660-785371fd63d0" width="250">
+</p>
+
 ![](https://img.shields.io/badge/Under%20Development%20-fc2803)
 
 # mkdocs-azure-pipelines
