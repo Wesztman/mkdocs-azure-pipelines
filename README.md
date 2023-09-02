@@ -88,7 +88,7 @@ Would result in the following markdown when processed by the plugin:
 
 This pipeline template is used to run pytest.
 
-## Example
+## Example usage
 
 ```yaml
 steps:
