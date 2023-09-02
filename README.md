@@ -7,6 +7,10 @@
 # mkdocs-azure-pipelines
 Generate mkdocs documentation from Azure Pipelines yaml files.
 
+## Why
+
+When managing a large repository of pipeline template files, it can be difficult to keep track of what each template does and how to use it. This plugin aims to make it easier to document pipeline templates by generating markdown documentation from the template files themselves and adding it to a mkdocs site.
+
 ## Project Goals
 
 ### Phase 1: Templates with parameters
@@ -28,11 +32,12 @@ Generate mkdocs documentation from Azure Pipelines yaml files.
 
 ### Phase 5: Robustness and extras
 
-- [ ] Parse variable section.
-- [ ] Support different syntaxes for parameters and variables i.e both with and without "name" and "type" keys.
+- [ ] Support different syntaxes for parameters i.e both with and without "name" and "type" keys.
 - [ ] Handle syntax errors gracefully with clear error messages.
-- [ ] Support smaller tags with only start point for title, about, example to make the syntax less verbose.
 
+### Phase 6: Any Azure Pipeline
+
+- [ ] Make the plugin work with any Azure Pipeline yaml file, not just templates. This means parsing variables, pool, trigger, resources etc.
 
 ## Syntax
 
