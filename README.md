@@ -30,28 +30,28 @@ The idea is to use some kind of syntax to indicate what should be documented. Th
 
 ### Example
 
-The following example shows how the syntax could be used to document a pipeline template and what the resulting markdown would look like.
+The following example shows how the syntax could look to document a pipeline template and what the resulting markdown would look like.
 
 ```yaml
 # pytest-step.yml
 
 #:::title-start:::
-Pytest pipeline step template
+# Pytest pipeline step template
 #:::title-end:::
 
 #:::about-start:::
-This pipeline template is used to run pytest.
+# This pipeline template is used to run pytest.
 #:::about-end:::
 
 #:::example-start:::
-steps:
-- template: pip-build-and-publish-step.yml@templates
-  parameters:
-    python_version: '3.6'
+# steps:
+# - template: pip-build-and-publish-step.yml@templates
+#   parameters:
+#     python_version: '3.6'
 #:::example-end:::
 
 #:::outputs-start:::
-- encouraging_message: A message to encourage the user.
+# - encouraging_message: A message to encourage the user.
 #:::outputs-end:::
 
 parameters:
