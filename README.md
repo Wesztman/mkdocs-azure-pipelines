@@ -14,19 +14,19 @@ Generate mkdocs documentation from Azure Pipelines yaml files.
 - [ ] **In Progress**: Create a Python script which can process a pipeline **template** and output a markdown file.
 - [ ] Convert to a real installable mkdocs plugin and publish to PyPi.
 
-### Phase 1.5: Automatic output parsing
+### Phase 2: Automatic output parsing
 
 - [ ] Make the plugin document outputs based on the actual pipeline code.
 
-### Phase 2: Puml
+### Phase 3: Puml
 
 - [ ] Generate puml diagrams for the template which take conditions and expressions into consideration.
 
-### Phase 3: Configuration
+### Phase 4: Configuration
 
 - [ ] Make plugin configuration options available to the user.
 
-### Phase 4: Robustness and extras
+### Phase 5: Robustness and extras
 
 - [ ] Parse variable section.
 - [ ] Support different syntaxes for parameters and variables i.e both with and without "name" and "type" keys.
