@@ -5,13 +5,14 @@ Generate mkdocs documentation from Azure Pipelines yaml files.
 
 ## Project Goals
 
-### Phase 1: Step templates
+### Phase 1: Step templates with parameters
 - [x] Establish a syntax for title, about, example, outputs etc.
 - [ ] **In Progress**: Create a Python script which can process a pipeline **step template** and output a markdown file.
 - [ ] Convert to a real installable mkdocs plugin and publish to PyPi.
 
-### Phase 1.5: Job templates
+### Phase 1.5: Job templates and variables
 - [ ] Make the script work for job templates also.
+- [ ] Parse variable sections
 
 ### Phase 2: Configuration and output parsing
 - [ ] Make plugin configuration options available to the user.
