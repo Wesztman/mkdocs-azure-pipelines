@@ -55,7 +55,7 @@ The following example shows how the syntax could look to document a pipeline tem
 #:::outputs-end:::
 
 parameters:
-- name: python_version
+- name: python_version # The version of Python to use.
   type: string
 
 steps:
