@@ -28,6 +28,7 @@ Generate mkdocs documentation from Azure Pipelines yaml files.
 ### Phase 4: Robustness
 - [ ] Support different syntaxes for parameters and variables.
 - [ ] Handle syntax errors gracefully with clear error messages.
+- [ ] Support smaller tags with only start point for title, about, example etc.
 
 
 ## Syntax
