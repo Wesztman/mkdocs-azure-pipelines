@@ -14,7 +14,7 @@ Generate mkdocs documentation from Azure Pipelines yaml files.
 - [ ] Make the script work for job templates also.
 
 ### Phase 2
-- [ ] Make configuration options available to the user.
+- [ ] Make plugin configuration options available to the user.
 - [ ] Make the plugin document outputs based on the actual pipeline code.
 
 ### Phase 3
@@ -22,6 +22,7 @@ Generate mkdocs documentation from Azure Pipelines yaml files.
 
 ### Phase 4
 - [ ] Make the plugin work with any Azure Pipelines yaml file and not just templates.
+- [ ] Support different syntaxes for parameters and variables.
 
 
 ## Syntax
