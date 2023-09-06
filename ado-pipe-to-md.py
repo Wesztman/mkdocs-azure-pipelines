@@ -1,6 +1,5 @@
 import re
 import os
-import yaml
 
 def process_pipeline_file(input_file):
     # Define regular expressions to find markers/tags
