@@ -1,5 +1,6 @@
 import re
 import os
+import yaml
 
 def process_pipeline_file(input_file):
     # Define regular expressions to find markers/tags
@@ -9,6 +10,9 @@ def process_pipeline_file(input_file):
     # Read the input pipeline file
     with open(input_file, 'r', encoding='utf-8') as f:
         pipeline_content = f.read()
+
+    # Parse the YAML content
+    pipeline_data = yaml.safe_load(pipeline_content)
 
     # Check for allowed tags
     allowed_tags = ['title', 'about', 'example', 'outputs', 'code']
@@ -64,6 +68,13 @@ def process_pipeline_file(input_file):
         about_text = about.group(1).strip()
         about_text = re.sub(r'^# ', '', about_text)
         markdown_content += f'{about_text}\n\n'
+
+    if 'parameters' in pipeline_data:
+        markdown_content += '## Parameters\n\n'
+        for param_info in pipeline_data['parameters']:
+            param_name = param_info['name']
+            param_type = param_info['type']
+            markdown_content += f'**{param_name} ({param_type})**:\n\n'
 
     if example:
         # Remove leading '#' characters from the example content
