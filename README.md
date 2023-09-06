@@ -15,8 +15,8 @@ When managing a large repository of pipeline template files, it can be difficult
 
 ### Phase 1: Templates with parameters
 - [x] Establish a syntax for title, about, example, outputs etc.
-- [ ] **In Progress**: Create a Python script which can process a pipeline **template** and output a markdown file.
-- [ ] Convert to a real installable mkdocs plugin and publish to PyPi.
+- [x] Create a Python script which can process a pipeline **template** and output a markdown file.
+- [ ] **In Progress**: Convert to a real installable mkdocs plugin and publish to PyPi.
 
 ### Phase 2: Automatic output parsing
 
