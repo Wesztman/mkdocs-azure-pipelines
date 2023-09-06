@@ -1,34 +1,36 @@
-# pytest-step.yml
-
-#:::title-start:::
 # Pytest pipeline step template
-#:::title-end:::
 
-#:::about-start:::
-# This pipeline template is used to run pytest.
-#:::about-end:::
+This pipeline template is used to run pytest.
 
-#:::example-start:::
-# steps:
-# - template: pip-build-and-publish-step.yml@templates
-#   parameters:
-#     python_version: '3.6'
-#:::example-end:::
+## Parameters
 
-#:::outputs-start:::
-# **encouraging_message**: A message to encourage the user.
-#:::outputs-end:::
+```yaml
 
-#:::parameters-start:::
 parameters:
 - name: python_version # The version of Python to use.
   type: string
 - name: encouraging_message # The message to output.
   type: string
   default: 'You look great today!'
-#:::parameters-end:::
 
-#:::code-start:::
+```
+
+## Outputs
+
+**encouraging_message**: A message to encourage the user.
+
+## Example
+
+```yaml
+steps:
+- template: pip-build-and-publish-step.yml@templates
+  parameters:
+    python_version: '3.6'
+```
+
+## Code
+
+```yaml
 steps:
   - task: UsePythonVersion@0
     inputs:
@@ -50,4 +52,5 @@ steps:
       echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
     displayName: 'Output encouraging message'
     name: output_encouraging_message
-#:::code-end:::
+```
+

@@ -69,10 +69,16 @@ The following example shows how the syntax could look to document a pipeline tem
 # - encouraging_message: A message to encourage the user.
 #:::outputs-end:::
 
+#:::parameters-start:::
 parameters:
 - name: python_version # The version of Python to use.
   type: string
+- name: encouraging_message # The message to output.
+  type: string
+  default: 'You look great today!'
+#:::parameters-end:::
 
+#:::code-start:::
 steps:
   - task: UsePythonVersion@0
     inputs:
@@ -91,9 +97,10 @@ steps:
     displayName: 'Run pytest'
 
   - bash: |
-      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]You look great today!"
+      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
     displayName: 'Output encouraging message'
     name: output_encouraging_message
+#:::code-end:::
 ```
 
 Would result in the following markdown when processed by the plugin:
@@ -102,6 +109,21 @@ Would result in the following markdown when processed by the plugin:
 # Pytest pipeline step template
 
 This pipeline template is used to run pytest.
+
+## Parameters
+
+```yaml
+parameters:
+- name: python_version # The version of Python to use.
+  type: string
+- name: encouraging_message # The message to output.
+  type: string
+  default: 'You look great today!'
+```
+
+## Outputs
+
+**encouraging_message**: A message to encourage the user.
 
 ## Example
 
@@ -112,21 +134,9 @@ parameters:
     python_version: '3.6'
 ```
 
-## Parameters
-
-- python_version: The version of Python to use.
-
-## Outputs
-
-- encouraging_message: A message to encourage the user.
-
 ## Code
 
 ```yaml
-parameters:
-- name: python_version
-  type: string
-
 steps:
   - task: UsePythonVersion@0
     inputs:

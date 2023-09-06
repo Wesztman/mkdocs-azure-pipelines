@@ -11,11 +11,8 @@ def process_pipeline_file(input_file):
     with open(input_file, 'r', encoding='utf-8') as f:
         pipeline_content = f.read()
 
-    # Parse the YAML content
-    pipeline_data = yaml.safe_load(pipeline_content)
-
     # Check for allowed tags
-    allowed_tags = ['title', 'about', 'example', 'outputs', 'code']
+    allowed_tags = ['title', 'about', 'example', 'outputs', 'parameters', 'code']
     found_tags = re.findall(r'#:::(\w+)-start:::', pipeline_content)
 
     for found_tag in found_tags:
@@ -52,6 +49,7 @@ def process_pipeline_file(input_file):
     about = re.search(r'#:::about-start:::(.*?)#:::about-end:::', pipeline_content, re.DOTALL)
     example = re.search(r'#:::example-start:::(.*?)#:::example-end:::', pipeline_content, re.DOTALL)
     outputs = re.search(r'#:::outputs-start:::(.*?)#:::outputs-end:::', pipeline_content, re.DOTALL)
+    parameters = re.search(r'#:::parameters-start:::(.*?)#:::parameters-end:::', pipeline_content, re.DOTALL)
     code = re.search(r'#:::code-start:::(.*?)#:::code-end:::', pipeline_content, re.DOTALL)
 
     # Create Markdown documentation
@@ -69,26 +67,12 @@ def process_pipeline_file(input_file):
         about_text = re.sub(r'^# ', '', about_text)
         markdown_content += f'{about_text}\n\n'
 
-    if 'parameters' in pipeline_data:
-        markdown_content += '## Parameters\n\n'
-        for param_info in pipeline_data['parameters']:
-            param_name = param_info['name']
-            param_type = param_info['type']
-            markdown_content += f'**{param_name} ({param_type})**:\n\n'
+    if parameters:
+        # Remove first line of parameter entries
+        # parameters = parameters.group(1).replace('parameters:\n', '')
 
-    if example:
-        # Remove leading '#' characters from the example content
-        example_text = example.group(1).strip()
-        example_text = re.sub(r'^# ', '', example_text, flags=re.MULTILINE)
-        markdown_content += '## Example\n\n```yaml\n'
-        markdown_content += example_text + '\n```\n\n'
-
-    if code:
-        # Remove leading '#' characters from the code content
-        code_text = code.group(1).strip()
-        code_text = re.sub(r'^# ', '', code_text, flags=re.MULTILINE)
-        markdown_content += '## Code\n\n```yaml\n'
-        markdown_content += code_text + '\n```\n\n'
+        markdown_content += '## Parameters\n\n```yaml\n'
+        markdown_content += parameters.group(1) + '\n```\n\n'
 
     if outputs:
         # Remove leading '#' characters from the outputs content
@@ -97,6 +81,21 @@ def process_pipeline_file(input_file):
         outputs_text = re.sub(r'^\s*#', '', outputs_text, flags=re.MULTILINE)
         markdown_content += '## Outputs\n\n'
         markdown_content += outputs_text + '\n\n'
+
+    if example:
+        # Remove leading '#' characters from the example content
+        example_text = example.group(1).strip()
+        example_text = re.sub(r'^# ', '', example_text, flags=re.MULTILINE)
+        markdown_content += '## Example\n\n```yaml\n'
+        markdown_content += example_text + '\n```\n\n'
+
+
+    if code:
+        # Remove leading '#' characters from the code content
+        code_text = code.group(1).strip()
+        code_text = re.sub(r'^# ', '', code_text, flags=re.MULTILINE)
+        markdown_content += '## Code\n\n```yaml\n'
+        markdown_content += code_text + '\n```\n\n'
 
     # Construct the output file path in the current directory
     output_file = os.path.basename(input_file).replace(".yml", ".md")
