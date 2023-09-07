@@ -18,17 +18,17 @@ When managing a large repository of pipeline template files, it can be difficult
 - [x] Create a Python script which can process a pipeline **template** and output a markdown file.
 - [ ] **In Progress**: Convert to a real installable mkdocs plugin and publish to PyPi.
 
-### Phase 2: Automatic output parsing
-
-- [ ] Make the plugin document outputs based on the actual pipeline code.
-
-### Phase 3: Puml
+### Phase 2: Puml
 
 - [ ] Generate puml diagrams for the template which take conditions and expressions into consideration.
 
-### Phase 4: Configuration
+### Phase 3: Automatic parameter parsing
 
-- [ ] Make plugin configuration options available to the user.
+- [ ] Make the plugin document parameters based on the actual pipeline code, no need to use parameters-start and parameters-end tags.
+
+### Phase 4: Automatic outputs parsing
+
+- [ ] Make the plugin document outputs based on the actual pipeline code, no need to use outputs-start and outputs-end tags/section.
 
 ### Phase 5: Robustness and extras
 
