@@ -160,3 +160,7 @@ steps:
     name: output_encouraging_message
 ```
 ``````
+
+Which would result in the following when built
+
+![image](https://github.com/Wesztman/mkdocs-azure-pipelines/assets/54413402/b130cde2-4b53-4510-8ad6-5a46850eeae9)
