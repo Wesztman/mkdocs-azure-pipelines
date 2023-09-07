@@ -46,9 +46,9 @@ def process_pipeline_file(input_file):
     # Extract content between markers and remove leading '#' characters
     title = re.search(r'#:::title-start:::(.*?)#:::title-end:::', pipeline_content, re.DOTALL)
     about = re.search(r'#:::about-start:::(.*?)#:::about-end:::', pipeline_content, re.DOTALL)
-    example = re.search(r'#:::example-start:::(.*?)#:::example-end:::', pipeline_content, re.DOTALL)
-    outputs = re.search(r'#:::outputs-start:::(.*?)#:::outputs-end:::', pipeline_content, re.DOTALL)
     parameters = re.search(r'#:::parameters-start:::(.*?)#:::parameters-end:::', pipeline_content, re.DOTALL)
+    outputs = re.search(r'#:::outputs-start:::(.*?)#:::outputs-end:::', pipeline_content, re.DOTALL)
+    example = re.search(r'#:::example-start:::(.*?)#:::example-end:::', pipeline_content, re.DOTALL)
     code = re.search(r'#:::code-start:::(.*?)#:::code-end:::', pipeline_content, re.DOTALL)
 
     # Create Markdown documentation
