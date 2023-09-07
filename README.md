@@ -66,7 +66,7 @@ The following example shows how the syntax could look to document a pipeline tem
 #:::example-end:::
 
 #:::outputs-start:::
-# - encouraging_message: A message to encourage the user.
+# **encouraging_message**: A message to encourage the user.
 #:::outputs-end:::
 
 #:::parameters-start:::
