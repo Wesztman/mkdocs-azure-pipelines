@@ -11,7 +11,7 @@ def process_pipeline_file(input_file):
         pipeline_content = f.read()
 
     # Check for allowed tags
-    allowed_tags = ['title', 'about', 'example', 'outputs', 'parameters', 'code']
+    allowed_tags = ['title', 'about', 'parameters', 'outputs', 'example', 'code']
     found_tags = re.findall(r'#:::(\w+)-start:::', pipeline_content)
 
     for found_tag in found_tags:
