@@ -54,43 +54,40 @@ def process_pipeline_file(input_file):
     # Create Markdown documentation
     markdown_content = ''
 
+    # Add title section
     if title:
-        # Remove leading '#' character from the title
         title_text = title.group(1).strip()
         title_text = re.sub(r'^# ', '', title_text)
         markdown_content += f'# {title_text}\n\n'
 
+    # Add about section
     if about:
-        # Remove leading '#' character from the about text
         about_text = about.group(1).strip()
         about_text = re.sub(r'^# ', '', about_text)
         markdown_content += f'{about_text}\n\n'
 
+    # Add parameters section
     if parameters:
-        # Remove first line of parameter entries
-        # parameters = parameters.group(1).replace('parameters:\n', '')
-
         markdown_content += '## Parameters\n\n```yaml\n'
         markdown_content += parameters.group(1) + '\n```\n\n'
 
+    # Add outputs section
     if outputs:
-        # Remove leading '#' characters from the outputs content
         outputs_text = outputs.group(1).strip()
         outputs_text = re.sub(r'^# ', '', outputs_text, flags=re.MULTILINE)
         outputs_text = re.sub(r'^\s*#', '', outputs_text, flags=re.MULTILINE)
         markdown_content += '## Outputs\n\n'
         markdown_content += outputs_text + '\n\n'
 
+    # Add example section
     if example:
-        # Remove leading '#' characters from the example content
         example_text = example.group(1).strip()
         example_text = re.sub(r'^# ', '', example_text, flags=re.MULTILINE)
         markdown_content += '## Example\n\n```yaml\n'
         markdown_content += example_text + '\n```\n\n'
 
-
+    # Add code section
     if code:
-        # Remove leading '#' characters from the code content
         code_text = code.group(1).strip()
         code_text = re.sub(r'^# ', '', code_text, flags=re.MULTILINE)
         markdown_content += '## Code\n\n```yaml\n'
