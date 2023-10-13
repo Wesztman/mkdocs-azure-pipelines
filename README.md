@@ -2,6 +2,7 @@
   <img src="https://github.com/Wesztman/mkdocs-azure-pipelines/assets/54413402/5d0e50ea-843a-4e63-8660-785371fd63d0" width="250">
 </p>
 
+[![tox](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/tox.yml/badge.svg)](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/tox.yml)
 ![](https://img.shields.io/badge/Under%20Development%20-fc2803)
 
 # mkdocs-azure-pipelines
