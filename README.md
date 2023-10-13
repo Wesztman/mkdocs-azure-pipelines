@@ -3,6 +3,7 @@
 </p>
 
 [![tox](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/tox.yml/badge.svg)](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/tox.yml)
+![](https://img.shields.io/badge/Python-%3E=3.10-blue)
 ![](https://img.shields.io/badge/Under%20Development%20-fc2803)
 
 # mkdocs-azure-pipelines
