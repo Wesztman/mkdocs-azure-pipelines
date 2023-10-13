@@ -2,4 +2,4 @@ covdefaults
 coverage
 pre-commit
 pytest
-tox
+tox==3.11.1
