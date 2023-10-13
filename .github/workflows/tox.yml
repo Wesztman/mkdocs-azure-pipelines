@@ -2,6 +2,8 @@ name: tox
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "0 8 * * *" # Every day at 8am UTC
 
 concurrency:
   group: tox-${{ github.ref }}
