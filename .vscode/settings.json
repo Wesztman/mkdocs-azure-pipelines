@@ -1,6 +1,9 @@
 {
+    "python.analysis.typeCheckingMode": "off",
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.rulers": [88]
     },
-    "python.formatting.provider": "none"
+    "python.formatting.provider": "none",
+    "editor.rulers": []
 }

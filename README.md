@@ -164,3 +164,22 @@ steps:
 Which would result in the following when built
 
 ![image](https://github.com/Wesztman/mkdocs-azure-pipelines/assets/54413402/b130cde2-4b53-4510-8ad6-5a46850eeae9)
+
+
+## Contributing
+
+### Development
+
+<span style="color: lightgreen"> 🔔 Make sure that you have [pipx](https://pypa.github.io/pipx/installation/) installed on your environment.</span>
+
+```bash
+pipx install pre-commit
+pipx install tox
+```
+
+### Testing
+Linting and formatting are handled by [pre-commit](https://pre-commit.com/). Tests and resources are in the tests directory written with [pytest](https://docs.pytest.org/en/latest/). Use [tox](https://tox.wiki/en/4.11.3/index.html) to run both of them:
+
+```bash
+tox
+```

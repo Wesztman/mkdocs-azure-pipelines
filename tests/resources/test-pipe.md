@@ -53,4 +53,3 @@ steps:
     displayName: 'Output encouraging message'
     name: output_encouraging_message
 ```
-
