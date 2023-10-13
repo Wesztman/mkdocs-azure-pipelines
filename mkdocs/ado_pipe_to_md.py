@@ -144,8 +144,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     md = process_pipeline_file(args.filename)
     # Write the Markdown content to the output file
-    with open(args.output, "w") as output_file:
-        output_file.write(md)
+    if args.output:
+        with open(args.output, "w") as output_file:
+            output_file.write(md)
 
     return 0
 
