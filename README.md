@@ -200,13 +200,15 @@ pdm install
 
 ```bash
 pdm run tox
-````
+```
 
 It's also possible to run the tasks in parallel using the `-p` flag, significantly reducing the time it takes to run the tasks.
 
 ```bash
 pdm run tox -p
 ```
+
+> If in VSCode, you can use the `Tasks: Run Build Task` (`Ctrl+Shift+B`) command from the command palette (`Ctrl+Shift+P`) to run tox in parallel mode.
 
 #### Separate tasks
 
