@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import argparse
 import re
-from typing import Sequence
-
+from collections.abc import Sequence
 
 START_TAG_PATTERN = r"#:::(\w+)-start:::"
 END_TAG_PATTERN = r"#:::(\w+)-end:::"
@@ -22,7 +21,7 @@ def findtags(expression: str, string: str) -> list:
     return re.findall(expression, string)
 
 
-def process_pipeline_file(input_file):
+def process_pipeline_file(input_file: str) -> str | None:
     # Read the input pipeline file
     with open(input_file, encoding="utf-8") as f:
         content = f.read()
@@ -32,14 +31,14 @@ def process_pipeline_file(input_file):
         if tag not in ALLOWED_TAGS:
             print(f"Found misspelled start tag: #:::{tag}-start:::")
             print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
-            return
+            return None
 
     end_tags = re.findall(END_TAG_PATTERN, content)
     for tag in end_tags:
         if tag not in ALLOWED_TAGS:
             print(f"Found misspelled end tag: #:::{tag}-end:::")
             print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
-            return
+            return None
 
     # Check for tag mismatches
     if len(start_tags) != len(end_tags):
@@ -49,15 +48,15 @@ def process_pipeline_file(input_file):
         )
         print(f"Start tags: {start_tags}")
         print(f"End tags: {end_tags}")
-        return
+        return None
 
-    for start_tag, end_tag in zip(start_tags, end_tags):
+    for start_tag, end_tag in zip(start_tags, end_tags, strict=False):
         if start_tag != end_tag:
             print(
                 f"Tag mismatch error: Start tag #{start_tag} does not match end tag \
                 #{end_tag}.",
             )
-            return
+            return None
 
     # Extract content between markers and remove leading '#' characters
     title = re.search(
@@ -92,7 +91,7 @@ def process_pipeline_file(input_file):
     )
 
     # Create Markdown documentation
-    markdown_content = ""
+    markdown_content: str = ""
 
     # Add title section
     if title:
@@ -144,7 +143,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     md = process_pipeline_file(args.filename)
     # Write the Markdown content to the output file
-    if args.output:
+    if args.output and md is not None:
         with open(args.output, "w") as output_file:
             output_file.write(md)
 
