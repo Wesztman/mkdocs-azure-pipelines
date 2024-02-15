@@ -36,4 +36,4 @@ jobs:
       - name: Install dependencies
         run: pdm install --no-lock -G tox
       - name: Run tox
-        run: pdm run tox
+        run: pdm run tox -p
