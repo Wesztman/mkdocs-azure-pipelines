@@ -7,6 +7,7 @@
 ![](https://img.shields.io/badge/Under%20Development%20-fc2803)
 
 # mkdocs-azure-pipelines
+
 Generate mkdocs documentation from Azure Pipelines yaml files.
 
 ## Why
@@ -16,6 +17,7 @@ When managing a large repository of pipeline template files, it can be difficult
 ## Project Goals
 
 ### Phase 1: Templates with parameters
+
 - [x] Establish a syntax for title, about, example, outputs etc.
 - [x] Create a Python script which can process a pipeline **template** and output a markdown file.
 - [ ] **In Progress**: Convert to a real installable mkdocs plugin and publish to PyPi.
@@ -73,11 +75,11 @@ The following example shows how the syntax could look to document a pipeline tem
 
 #:::parameters-start:::
 parameters:
-- name: python_version # The version of Python to use.
-  type: string
-- name: encouraging_message # The message to output.
-  type: string
-  default: 'You look great today!'
+  - name: python_version # The version of Python to use.
+    type: string
+  - name: encouraging_message # The message to output.
+    type: string
+    default: "You look great today!"
 #:::parameters-end:::
 
 #:::code-start:::
@@ -86,28 +88,28 @@ steps:
     inputs:
       versionSpec: ${{ parameters.python_version }}
       addToPath: true
-      architecture: 'x64'
+      architecture: "x64"
 
   - bash: |
       python -m pip install --upgrade pip
       pip install -r requirements.txt
-    displayName: 'Install dependencies'
+    displayName: "Install dependencies"
 
   - bash: |
       pip install pytest pytest-azurepipelines
       pytest
-    displayName: 'Run pytest'
+    displayName: "Run pytest"
 
   - bash: |
       echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
-    displayName: 'Output encouraging message'
+    displayName: "Output encouraging message"
     name: output_encouraging_message
 #:::code-end:::
 ```
 
 Would result in the following markdown when processed by the plugin:
 
-``````markdown
+````markdown
 # Pytest pipeline step template
 
 This pipeline template is used to run pytest.
@@ -116,11 +118,11 @@ This pipeline template is used to run pytest.
 
 ```yaml
 parameters:
-- name: python_version # The version of Python to use.
-  type: string
-- name: encouraging_message # The message to output.
-  type: string
-  default: 'You look great today!'
+  - name: python_version # The version of Python to use.
+    type: string
+  - name: encouraging_message # The message to output.
+    type: string
+    default: "You look great today!"
 ```
 
 ## Outputs
@@ -131,9 +133,9 @@ parameters:
 
 ```yaml
 steps:
-- template: pip-build-and-publish-step.yml@templates
+  - template: pip-build-and-publish-step.yml@templates
 parameters:
-    python_version: '3.6'
+  python_version: "3.6"
 ```
 
 ## Code
@@ -144,45 +146,73 @@ steps:
     inputs:
       versionSpec: ${{ parameters.python_version }}
       addToPath: true
-      architecture: 'x64'
+      architecture: "x64"
 
   - bash: |
       python -m pip install --upgrade pip
       pip install -r requirements.txt
-    displayName: 'Install dependencies'
+    displayName: "Install dependencies"
 
   - bash: |
       pip install pytest pytest-azurepipelines
       pytest
-    displayName: 'Run pytest'
+    displayName: "Run pytest"
 
   - bash: |
       echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]You look great today!"
-    displayName: 'Output encouraging message'
+    displayName: "Output encouraging message"
     name: output_encouraging_message
 ```
-``````
+````
 
 Which would result in the following when built
 
 ![image](https://github.com/Wesztman/mkdocs-azure-pipelines/assets/54413402/b130cde2-4b53-4510-8ad6-5a46850eeae9)
 
-
 ## Contributing
 
 ### Development
 
-<span style="color: lightgreen"> 🔔 Make sure that you have [pipx](https://pypa.github.io/pipx/installation/) installed on your environment.</span>
+Development is done with [PDM](https://pdm.fming.dev/), using tox as a task runner for testing, formatting, linting and pre-commit hooks. Python 3.10 or higher is required.
 
-Start with installing [tox](https://tox.wiki/en/4.12.1/):
+#### 1. Install PDM
 
 ```bash
-pipx install tox
+# Linux/MacOS
+curl -sSL https://pdm-project.org/install-pdm.py | python3 -
+
+# Windows
+(Invoke-WebRequest -Uri https://pdm-project.org/install-pdm.py -UseBasicParsing).Content | py -
 ```
 
-### Testing
-Linting and formatting are handled by [pre-commit](https://pre-commit.com/). Tests and resources are in the tests directory written with [pytest](https://docs.pytest.org/en/latest/). Use [tox](https://tox.wiki/en/4.11.3/index.html) to run both of them:
+#### 2. Install dependencies
 
 ```bash
-tox
+# clone the repository
+# cd into the repository
+pdm install
+```
+
+> Alternatively if you want to save some time and only intend to run tox you can
+> install only the tox group of dependencies with `pdm install -G tox`.
+
+#### 3. Run tests, linting and formatting checks, pre-commit hooks, type checking as well as building the package
+
+```bash
+pdm run tox
+````
+
+#### Separate tasks
+
+Alternatively you can run the tasks separately using the provided PDM scripts.
+
+```bash
+# Seperately
+pdm run format
+pdm run lint
+pdm run typecheck
+pdm run test
+
+# Or all at once
+pdm run all
 ```
