@@ -194,7 +194,7 @@ pdm install
 ```
 
 > Alternatively if you want to save some time and only intend to run tox you can
-> install only the tox group of dependencies with `pdm install -G tox`.
+> install only the dev group of dependencies with `pdm install -G dev`.
 
 #### 3. Run tests, linting and formatting checks, pre-commit hooks, type checking as well as building the package
 
@@ -209,6 +209,16 @@ pdm run tox -p
 ```
 
 > If in VSCode, you can use the `Tasks: Run Build Task` (`Ctrl+Shift+B`) command from the command palette (`Ctrl+Shift+P`) to run tox in parallel mode.
+
+#### 4. Install the pre-commit hooks
+
+If you want to be sure that your code is properly formatted and linted before committing, you can install the pre-commit hooks.
+
+```bash
+pdm run pre-commit install
+```
+
+This will stop you from committing if the code is not properly formatted or linted.
 
 #### Separate tasks
 
