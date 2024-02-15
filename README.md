@@ -174,9 +174,16 @@ Which would result in the following when built
 
 <span style="color: lightgreen"> 🔔 Make sure that you have [pipx](https://pypa.github.io/pipx/installation/) installed on your environment.</span>
 
+Start with installing [tox](https://tox.wiki/en/4.12.1/):
+
 ```bash
-pipx install pre-commit
 pipx install tox
+```
+
+To install all deps and run all tests plus checks simply run:
+
+```bash
+tox
 ```
 
 ### Testing
