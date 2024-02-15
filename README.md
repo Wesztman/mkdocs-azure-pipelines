@@ -202,6 +202,12 @@ pdm install
 pdm run tox
 ````
 
+It's also possible to run the tasks in parallel using the `-p` flag, significantly reducing the time it takes to run the tasks.
+
+```bash
+pdm run tox -p
+```
+
 #### Separate tasks
 
 Alternatively you can run the tasks separately using the provided PDM scripts.
