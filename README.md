@@ -180,12 +180,6 @@ Start with installing [tox](https://tox.wiki/en/4.12.1/):
 pipx install tox
 ```
 
-To install all deps and run all tests plus checks simply run:
-
-```bash
-tox
-```
-
 ### Testing
 Linting and formatting are handled by [pre-commit](https://pre-commit.com/). Tests and resources are in the tests directory written with [pytest](https://docs.pytest.org/en/latest/). Use [tox](https://tox.wiki/en/4.11.3/index.html) to run both of them:
 
