@@ -1,6 +1,8 @@
 name: tox
 on:
   push:
+    branches:
+      - main
   pull_request:
   schedule:
     - cron: "0 8 * * *" # Every day at 8am UTC
@@ -24,16 +26,16 @@ jobs:
           - ubuntu-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup python for test ${{ matrix.py }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.py }}
-      - name: Install tox
-        run: python -m pip install tox-gh>=1.2
-      - name: Setup test suite
-        run: tox -vv --notest
-      - name: Run test suite
-        run: tox --skip-pkg-install
+      - name: Install PDM
+        run: python -m pip install pdm
+      - name: Install dependencies
+        run: pdm install --no-lock -G dev
+      - name: Run tox
+        run: pdm run tox -p
