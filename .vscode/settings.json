@@ -4,6 +4,6 @@
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.rulers": [88]
     },
-    "python.formatting.provider": "none",
+    "editor.tabSize": 2,
     "editor.rulers": []
 }
