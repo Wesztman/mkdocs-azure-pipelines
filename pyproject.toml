@@ -10,23 +10,23 @@ description = "MkDocs plugin to generate documentation for Azure Pipelines/Templ
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Carl Westman", email = "carl.westman91@gmail.com" }]
-dependencies = ["mkdocs~=1.5.3"]
+dependencies = ["markdown~=3.3.6"]
+
+[project.entry-points."markdown.extensions"]
+mkdocs-azure-pipelines = "mkdocs_azure_pipelines:MkAzurePipelinesExtension"
 
 [project.urls]
 Repository = "https://github.com/Wesztman/mkdocs-azure-pipelines"
 
 [project.optional-dependencies]
-dev = [
-    "tox~=4.12.1",
-    "tox-pdm~=0.7.2",
-    "pre-commit~=3.6.1",
-]
+dev = ["tox~=4.12.1", "tox-pdm~=0.7.2", "pre-commit~=3.6.1"]
 lint = ["mypy~=1.8.0", "ruff~=0.2.1"]
 test = ["pytest~=8.0.0", "pytest-cov~=4.1.0", "coverage[toml]~=7.4.1"]
 all = [
-    "mkdocs-azure-pipelines[dev]",
-    "mkdocs-azure-pipelines[lint]",
-    "mkdocs-azure-pipelines[test]",
+  "mkdocs-azure-pipelines[dev]",
+  "mkdocs-azure-pipelines[lint]",
+  "mkdocs-azure-pipelines[test]",
+  "mkdocs~=1.5.3",
 ]
 
 [tool.pdm.scripts]
@@ -37,36 +37,35 @@ test = "pdm run pytest --cov mkdocs_azure_pipelines --cov-report term --cov-repo
 all = { composite = ["format", "lint", "typecheck", "test"] }
 
 [tool.ruff]
-src = ["src"]
 extend-exclude = ["conf.py"]
 
 [tool.ruff.lint]
 select = [
-    # pycodestyle
-    "E",
-    # Pyflakes
-    "F",
-    # pyupgrade
-    "UP",
-    # flake8-bugbear
-    "B",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
+  # pycodestyle
+  "E",
+  # Pyflakes
+  "F",
+  # pyupgrade
+  "UP",
+  # flake8-bugbear
+  "B",
+  # flake8-simplify
+  "SIM",
+  # isort
+  "I",
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
 "tests/**" = [
-    "S101", # Use of `assert` detected
-    "D103", # Missing docstring in public function
+  "S101", # Use of `assert` detected
+  "D103", # Missing docstring in public function
 ]
 "**/__init__.py" = [
-    "F401", # Imported but unused
-    "F403", # Wildcard imports
+  "F401", # Imported but unused
+  "F403", # Wildcard imports
 ]
 "docs/**" = [
-    "INP001", # Requires __init__.py but docs folder is not a package.
+  "INP001", # Requires __init__.py but docs folder is not a package.
 ]
 
 [tool.mypy]
