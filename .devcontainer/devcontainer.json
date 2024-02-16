@@ -8,7 +8,7 @@
     },
     "ghcr.io/devcontainers-contrib/features/pdm:2": {}
   },
-  "postCreateCommand": "pdm sync -G all",
+  "postCreateCommand": "pdm sync -G all && pdm run pre-commit install",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -41,7 +41,10 @@
           },
           "editor.defaultFormatter": "charliermarsh.ruff"
         },
-        "sonarlint.pathToNodeExecutable": "/usr/local/share/nvm/versions/node/v20.11.1/bin/node"
+        "sonarlint.pathToNodeExecutable": "/usr/local/share/nvm/versions/node/v20.11.1/bin/node",
+        "cSpell.ignorePaths": [
+          "pdm.lock"
+        ]
       }
     }
   },
