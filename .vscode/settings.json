@@ -1,9 +1,12 @@
 {
-    "python.analysis.typeCheckingMode": "off",
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.rulers": [88]
-    },
-    "editor.tabSize": 2,
-    "editor.rulers": []
+  "python.analysis.typeCheckingMode": "basic",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.rulers": [
+      88
+    ]
+  },
+  "editor.tabSize": 2,
+  "editor.rulers": [],
+  "python.analysis.autoImportCompletions": true
 }

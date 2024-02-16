@@ -33,7 +33,7 @@ all = [
 format = "ruff format . --check"
 lint = "ruff check . --fix"
 typecheck = "mypy ."
-test = "pdm run pytest --cov mkdocs_azure_pipelines --cov-report term --cov-report html tests/ -v"
+test = "pdm run pytest --cov src/mkdocs_azure_pipelines --cov-report term --cov-report html tests/ -v"
 all = { composite = ["format", "lint", "typecheck", "test"] }
 
 [tool.ruff]

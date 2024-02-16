@@ -8,7 +8,10 @@
     },
     "ghcr.io/devcontainers-contrib/features/pdm:2": {}
   },
-  "postCreateCommand": "pdm sync -G all && pdm run pre-commit install",
+  "containerEnv": {
+    "PDM_PYTHON": "${workspaceFolder}/.venv/bin/python"
+  },
+  "postCreateCommand": "pdm sync && pdm run pre-commit install",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -20,11 +23,12 @@
         "tamasfe.even-better-toml",
         "charliermarsh.ruff",
         "esbenp.prettier-vscode",
-        "matangover.mypy",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "ms-python.mypy-type-checker"
       ],
       "settings": {
-        "python.analysis.typeCheckingMode": "basic", // Turn on after updating code
+        "python.analysis.typeCheckingMode": "basic",
+        "python.analysis.autoImportCompletions": true,
         "python.languageServer": "Pylance",
         "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
         "python.testing.pytestEnabled": true,
@@ -44,7 +48,9 @@
         "sonarlint.pathToNodeExecutable": "/usr/local/share/nvm/versions/node/v20.11.1/bin/node",
         "cSpell.ignorePaths": [
           "pdm.lock"
-        ]
+        ],
+        "mypy-type-checker.preferDaemon": true,
+        "mypy-type-checker.reportingScope": "workspace"
       }
     }
   },
