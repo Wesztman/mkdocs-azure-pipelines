@@ -37,6 +37,7 @@ test = "pdm run pytest --cov mkdocs_azure_pipelines --cov-report term --cov-repo
 all = { composite = ["format", "lint", "typecheck", "test"] }
 
 [tool.ruff]
+src = ["src"]
 extend-exclude = ["conf.py"]
 
 [tool.ruff.lint]
@@ -69,7 +70,7 @@ select = [
 ]
 
 [tool.mypy]
-disallow_untyped_defs = true                      # Functions need to be annotated
+disallow_untyped_defs = true
 warn_unused_ignores = true
 exclude = [".venv/", "build/", "dist/", "tests/"]
 
