@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import argparse
 import re
 from collections.abc import Sequence
@@ -17,8 +15,18 @@ ALLOWED_TAGS = [
 ]
 
 
-def findtags(expression: str, string: str) -> list:
+def find_tags(expression: str, string: str) -> list:
     return re.findall(expression, string)
+
+
+def extract_section_content(content: str, section_name: str) -> str | None:
+    pattern = rf"#:::{section_name}-start:::(.*?)#:::{section_name}-end:::"
+    match = re.search(pattern, content, re.DOTALL)
+    if match:
+        section_text = match.group(1).strip()
+        section_text = re.sub(r"^# ", "", section_text, flags=re.MULTILINE)
+        return section_text
+    return None
 
 
 def process_pipeline_file(input_file: str) -> str | None:
@@ -26,111 +34,40 @@ def process_pipeline_file(input_file: str) -> str | None:
     with open(input_file, encoding="utf-8") as f:
         content = f.read()
 
-    start_tags = re.findall(START_TAG_PATTERN, content)
-    for tag in start_tags:
-        if tag not in ALLOWED_TAGS:
-            print(f"Found misspelled start tag: #:::{tag}-start:::")
-            print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
-            return None
+    start_tags = find_tags(START_TAG_PATTERN, content)
+    end_tags = find_tags(END_TAG_PATTERN, content)
 
-    end_tags = re.findall(END_TAG_PATTERN, content)
-    for tag in end_tags:
-        if tag not in ALLOWED_TAGS:
-            print(f"Found misspelled end tag: #:::{tag}-end:::")
-            print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
-            return None
-
-    # Check for tag mismatches
-    if len(start_tags) != len(end_tags):
-        print(
-            "Tag mismatch error: Number of start tags does not match the number of \
-            end tags.",
-        )
-        print(f"Start tags: {start_tags}")
-        print(f"End tags: {end_tags}")
+    # Check for misspelled tags or tag mismatches
+    if any(tag not in ALLOWED_TAGS for tag in start_tags):
+        print("Found misspelled start tags.")
+        print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
         return None
 
-    for start_tag, end_tag in zip(start_tags, end_tags, strict=False):
-        if start_tag != end_tag:
-            print(
-                f"Tag mismatch error: Start tag #{start_tag} does not match end tag \
-                #{end_tag}.",
-            )
-            return None
+    if any(tag not in ALLOWED_TAGS for tag in end_tags):
+        print("Found misspelled end tags.")
+        print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
+        return None
 
-    # Extract content between markers and remove leading '#' characters
-    title = re.search(
-        r"#:::title-start:::(.*?)#:::title-end:::",
-        content,
-        re.DOTALL,
-    )
-    about = re.search(
-        r"#:::about-start:::(.*?)#:::about-end:::",
-        content,
-        re.DOTALL,
-    )
-    parameters = re.search(
-        r"#:::parameters-start:::(.*?)#:::parameters-end:::",
-        content,
-        re.DOTALL,
-    )
-    outputs = re.search(
-        r"#:::outputs-start:::(.*?)#:::outputs-end:::",
-        content,
-        re.DOTALL,
-    )
-    example = re.search(
-        r"#:::example-start:::(.*?)#:::example-end:::",
-        content,
-        re.DOTALL,
-    )
-    code = re.search(
-        r"#:::code-start:::(.*?)#:::code-end:::",
-        content,
-        re.DOTALL,
-    )
+    if len(start_tags) != len(end_tags) or set(start_tags) != set(end_tags):
+        print("Tag mismatch error.")
+        print("Start tags:", start_tags)
+        print("End tags:", end_tags)
+        return None
 
     # Create Markdown documentation
-    markdown_content: str = ""
+    markdown_content = ""
 
-    # Add title section
-    if title:
-        title_text = title.group(1).strip()
-        title_text = re.sub(r"^# ", "", title_text)
-        markdown_content += f"# {title_text}\n\n"
+    # Extract and add title
+    title = extract_section_content(content, "title")
+    if title is not None:
+        markdown_content += f"# {title}\n\n"
 
-    # Add about section
-    if about:
-        about_text = about.group(1).strip()
-        about_text = re.sub(r"^# ", "", about_text)
-        markdown_content += f"{about_text}\n\n"
-
-    # Add parameters section
-    if parameters:
-        markdown_content += "## Parameters\n\n```yaml\n"
-        markdown_content += parameters.group(1) + "\n```\n\n"
-
-    # Add outputs section
-    if outputs:
-        outputs_text = outputs.group(1).strip()
-        outputs_text = re.sub(r"^# ", "", outputs_text, flags=re.MULTILINE)
-        outputs_text = re.sub(r"^\s*#", "", outputs_text, flags=re.MULTILINE)
-        markdown_content += "## Outputs\n\n"
-        markdown_content += outputs_text + "\n\n"
-
-    # Add example section
-    if example:
-        example_text = example.group(1).strip()
-        example_text = re.sub(r"^# ", "", example_text, flags=re.MULTILINE)
-        markdown_content += "## Example\n\n```yaml\n"
-        markdown_content += example_text + "\n```\n\n"
-
-    # Add code section
-    if code:
-        code_text = code.group(1).strip()
-        code_text = re.sub(r"^# ", "", code_text, flags=re.MULTILINE)
-        markdown_content += "## Code\n\n```yaml\n"
-        markdown_content += code_text + "\n```\n\n"
+    # Extract and add other sections
+    for section_name in ALLOWED_TAGS[1:]:  # Exclude title
+        section_content = extract_section_content(content, section_name)
+        if section_content is not None:
+            markdown_content += f"## {section_name.capitalize()}\n\n"
+            markdown_content += f"{section_content}\n\n"
 
     return markdown_content
 

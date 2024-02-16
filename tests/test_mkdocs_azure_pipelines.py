@@ -1,6 +1,6 @@
 import os
 
-from mkdocs_azure_pipelines.ado_pipe_to_md import main
+from src.mkdocs_azure_pipelines.ado_pipe_to_md import main
 
 
 def test_main(tmp_path):
