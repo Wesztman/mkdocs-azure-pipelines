@@ -20,7 +20,7 @@ Repository = "https://github.com/Wesztman/mkdocs-azure-pipelines"
 
 [project.optional-dependencies]
 dev = ["tox~=4.12.1", "tox-pdm~=0.7.2", "pre-commit~=3.6.1"]
-lint = ["mypy~=1.8.0", "ruff~=0.2.1"]
+lint = ["mypy~=1.8.0", "ruff~=0.2.1", "types-Markdown~=3.5.0.3"]
 test = ["pytest~=8.0.0", "pytest-cov~=4.1.0", "coverage[toml]~=7.4.1"]
 all = [
   "mkdocs-azure-pipelines[dev]",

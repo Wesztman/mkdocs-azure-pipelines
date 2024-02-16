@@ -5,7 +5,7 @@
 groups = ["default", "test", "dev", "lint", "all"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:bd377b2ea69989b0ed1f27f8c916a46d424f406cc83511784eb76e3dcdc202c5"
+content_hash = "sha256:1a005cfdbc2e6223ab6eeeaf24fb0ae17b867b23865e38d20d57808c0a9f766a"
 
 [[package]]
 name = "cachetools"
@@ -646,6 +646,17 @@ dependencies = [
 files = [
     {file = "tox_pdm-0.7.2-py3-none-any.whl", hash = "sha256:12f6215416b7acd00a80a9e7128f3dc3e3c89308d60707f5d0a24abdf83ac104"},
     {file = "tox_pdm-0.7.2.tar.gz", hash = "sha256:a841a7e1e942a71805624703b9a6d286663bd6af79bba6130ba756975c315308"},
+]
+
+[[package]]
+name = "types-markdown"
+version = "3.5.0.20240129"
+requires_python = ">=3.8"
+summary = "Typing stubs for Markdown"
+groups = ["all", "lint"]
+files = [
+    {file = "types-Markdown-3.5.0.20240129.tar.gz", hash = "sha256:9acd36fef264d9ed5a96345c45f7d80f0d967059e92213998b3046fbb64f67fc"},
+    {file = "types_Markdown-3.5.0.20240129-py3-none-any.whl", hash = "sha256:d6861d9d68e8268a5346d8a43d14727e6c636ebc6d49f2b8fc034c25996d35dd"},
 ]
 
 [[package]]
