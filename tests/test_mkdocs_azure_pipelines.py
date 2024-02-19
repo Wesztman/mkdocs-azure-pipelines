@@ -1,6 +1,6 @@
 import os
 
-from src.mkdocs_azure_pipelines.ado_pipe_to_md import main
+from src.mkdocs_azure_pipelines.ado_pipe_to_md import cli
 
 
 def test_main(tmp_path):
@@ -11,7 +11,7 @@ def test_main(tmp_path):
 
     # Run main with input file and output to a temporary file
     output_file = os.path.join(tmp_path, "test-pipe.md")
-    main([input_file, "-o", output_file])
+    cli([input_file, "-o", output_file])
 
     # Read generated Markdown content
     with open(output_file) as f:

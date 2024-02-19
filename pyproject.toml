@@ -15,6 +15,9 @@ dependencies = ["markdown~=3.3.6"]
 [project.entry-points."markdown.extensions"]
 mkdocs-azure-pipelines = "mkdocs_azure_pipelines:MkAzurePipelinesExtension"
 
+[project.scripts]
+mkdocs-azure-pipelines = "mkdocs_azure_pipelines:cli"
+
 [project.urls]
 Repository = "https://github.com/Wesztman/mkdocs-azure-pipelines"
 

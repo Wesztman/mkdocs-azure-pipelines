@@ -11,7 +11,7 @@
   "containerEnv": {
     "PDM_PYTHON": "${workspaceFolder}/.venv/bin/python"
   },
-  "postCreateCommand": "pdm sync && pdm run pre-commit install",
+  "postCreateCommand": "pdm sync -G all && pdm run pre-commit install",
   "customizations": {
     "vscode": {
       "extensions": [
