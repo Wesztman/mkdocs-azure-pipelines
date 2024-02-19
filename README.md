@@ -173,6 +173,20 @@ Which would result in the following when built
 
 ### Development
 
+#### Using the provided development container
+
+The repository comes with a development container which has all the necessary dependencies installed. To use it, you need to have Docker installed on your machine.
+
+Not required but recommended: Use VSCode and install the [Dev Container extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+
+When you open the repository in VSCode, you will be prompted to reopen the repository in the development container. If you don't see the prompt, you can open the command palette (`Ctrl+Shift+P`) and search for `Dev Container: Reopen in Container`.
+
+It's also possible to use the [Dev Container CLI](https://github.com/devcontainers/cli) to open the repository in the development container.
+
+After opening the repository in the development container, you can run the tasks in the terminal. Such as `tox` to run the tests, linting and formatting checks.
+
+#### Using PDM on your local machine
+
 Development is done with [PDM](https://pdm.fming.dev/), using tox as a task runner for testing, formatting, linting and pre-commit hooks. Python 3.10 or higher is required.
 
 #### 1. Install PDM
@@ -190,7 +204,7 @@ curl -sSL https://pdm-project.org/install-pdm.py | python3 -
 ```bash
 # clone the repository
 # cd into the repository
-pdm install
+pdm sync
 ```
 
 > Alternatively if you want to save some time and only intend to run tox you can
