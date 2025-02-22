@@ -1,0 +1,22 @@
+site_name: "Test MkDocs Azure Pipelines Plugin"
+
+theme:
+  name: "material"
+
+plugins:
+  - search
+  - mkdocs-azure-pipelines:
+      input_files:
+        - tests/resources/test-pipe.yml
+      input_dirs:
+        - tests/resources/folder_with_pipelines
+      output_dir: "pipelines"
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

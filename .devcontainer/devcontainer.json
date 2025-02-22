@@ -8,7 +8,7 @@
     },
     "ghcr.io/va-h/devcontainers-features/uv:1": {}
   },
-  "postCreateCommand": "uv --link-mode=copy && uv run pre-commit install",
+  "postCreateCommand": "uv sync --link-mode=copy && uv run pre-commit install",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -20,7 +20,6 @@
         "tamasfe.even-better-toml",
         "charliermarsh.ruff",
         "esbenp.prettier-vscode",
-        "matangover.mypy",
         "github.vscode-github-actions"
       ],
       "settings": {

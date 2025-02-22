@@ -1,9 +1,8 @@
-import argparse
 import re
-from collections.abc import Sequence
 
 START_TAG_PATTERN = r"#:::(\w+)-start:::"
 END_TAG_PATTERN = r"#:::(\w+)-end:::"
+CODE_BLOCK_TAG = "#:::code-block:::"
 
 ALLOWED_TAGS = [
     "title",
@@ -25,7 +24,12 @@ def extract_section_content(content: str, section_name: str) -> str | None:
     if match:
         section_text = match.group(1).strip()
         section_text = re.sub(r"^# ", "", section_text, flags=re.MULTILINE)
-        return section_text
+        # Handle code blocks
+        if CODE_BLOCK_TAG in section_text:
+            section_text = section_text.replace(CODE_BLOCK_TAG, "")
+            return f"```yaml\n{section_text.strip()}\n```"
+
+        return section_text.strip()
     return None
 
 
@@ -70,22 +74,3 @@ def process_pipeline_file(input_file: str) -> str | None:
             markdown_content += f"{section_content}\n\n"
 
     return markdown_content
-
-
-def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("filename")
-    parser.add_argument("-o", "--output", help="output file")
-    args = parser.parse_args(argv)
-
-    md = process_pipeline_file(args.filename)
-    # Write the Markdown content to the output file
-    if args.output and md is not None:
-        with open(args.output, "w") as output_file:
-            output_file.write(md)
-
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

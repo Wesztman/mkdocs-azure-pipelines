@@ -1,4 +1,4 @@
-# pytest-step.yml
+#:::mkdocs-azure-pipelines:::
 
 #:::title-start:::
 # Pytest pipeline step template
@@ -9,6 +9,7 @@
 #:::about-end:::
 
 #:::example-start:::
+#:::code-block:::
 # steps:
 # - template: pip-build-and-publish-step.yml@templates
 #   parameters:
@@ -20,34 +21,36 @@
 #:::outputs-end:::
 
 #:::parameters-start:::
+#:::code-block:::
 parameters:
-- name: python_version # The version of Python to use.
-  type: string
-- name: encouraging_message # The message to output.
-  type: string
-  default: 'You look great today!'
+  - name: python_version # The version of Python to use.
+    type: string
+  - name: encouraging_message # The message to output.
+    type: string
+    default: "You look great today!"
 #:::parameters-end:::
 
 #:::code-start:::
+#:::code-block:::
 steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: ${{ parameters.python_version }}
       addToPath: true
-      architecture: 'x64'
+      architecture: "x64"
 
   - bash: |
       python -m pip install --upgrade pip
       pip install -r requirements.txt
-    displayName: 'Install dependencies'
+    displayName: "Install dependencies"
 
   - bash: |
       pip install pytest pytest-azurepipelines
       pytest
-    displayName: 'Run pytest'
+    displayName: "Run pytest"
 
   - bash: |
       echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
-    displayName: 'Output encouraging message'
+    displayName: "Output encouraging message"
     name: output_encouraging_message
 #:::code-end:::
