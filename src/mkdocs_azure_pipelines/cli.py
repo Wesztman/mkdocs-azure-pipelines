@@ -9,8 +9,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("filename", help="input file")
     parser.add_argument("-o", "--output", help="output file")
     args = parser.parse_args(argv)
-
-    md = process_pipeline_file(args.filename)
+    try:
+        md = process_pipeline_file(args.filename)
+    except FileNotFoundError:
+        print(f"File not found: {args.filename}")
+        return 1
     # Write the Markdown content to the output file
     if args.output and md is not None:
         with open(args.output, "w") as output_file:
