@@ -22,26 +22,26 @@ When managing a large repository of pipeline template files, it can be difficult
 - [x] Create a Python script which can process a pipeline **template** and output a markdown file.
 - [ ] **In Progress**: Convert to a real installable markdown extensions for mkdocs and publish to PyPi.
 
-### Phase 2: Puml
+### Phase 2: Automatic parameter and code parsing
 
-- [ ] Generate puml diagrams for the template which take conditions and expressions into consideration.
+- [ ] Make the plugin document parameters based on the actual pipeline code, no need to use parameters/code-start and -end tags.
 
-### Phase 3: Automatic parameter parsing
-
-- [ ] Make the plugin document parameters based on the actual pipeline code, no need to use parameters-start and parameters-end tags.
-
-### Phase 4: Automatic outputs parsing
+### Phase 3: Automatic outputs parsing
 
 - [ ] Make the plugin document outputs based on the actual pipeline code, no need to use outputs-start and outputs-end tags/section.
 
-### Phase 5: Robustness and extras
+### Phase 4: Robustness and extras
 
 - [ ] Support different syntaxes for parameters i.e both with and without "name" and "type" keys.
 - [ ] Handle syntax errors gracefully with clear error messages.
 
-### Phase 6: Any Azure Pipeline
+### Phase 5: Any Azure Pipeline
 
 - [ ] Make the plugin work with any Azure Pipeline yaml file, not just templates. This means parsing variables, pool, trigger, resources etc.
+
+### Phase 6: Mermaid diagrams
+
+- [ ] Generate mermaid diagrams for the template which take conditions and expressions into consideration.
 
 ## Syntax
 

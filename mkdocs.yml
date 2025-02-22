@@ -10,7 +10,7 @@ plugins:
         - tests/resources/test-pipe.yml
       input_dirs:
         - tests/resources/folder_with_pipelines
-      output_dir: "pipelines"
+      output_dir: "Pipelines"
 
 markdown_extensions:
   - pymdownx.highlight:
