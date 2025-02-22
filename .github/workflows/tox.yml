@@ -1,4 +1,4 @@
-name: tox
+name: test
 on:
   push:
     branches:
@@ -36,6 +36,6 @@ jobs:
       - name: Install PDM
         run: python -m pip install pdm
       - name: Install dependencies
-        run: pdm install --no-lock -G dev
+        run: uv sync --all-extras
       - name: Run tox
         run: pdm run tox -p

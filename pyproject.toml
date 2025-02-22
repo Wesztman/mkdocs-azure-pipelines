@@ -1,7 +1,3 @@
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
 [project]
 name = "mkdocs-azure-pipelines"
 requires-python = ">=3.10"
@@ -10,7 +6,7 @@ description = "MkDocs plugin to generate documentation for Azure Pipelines/Templ
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Carl Westman", email = "carl.westman91@gmail.com" }]
-dependencies = ["markdown~=3.3.6"]
+dependencies = ["mkdocs~=1.6.1"]
 
 [project.entry-points."markdown.extensions"]
 mkdocs-azure-pipelines = "mkdocs_azure_pipelines:MkAzurePipelinesExtension"
@@ -18,23 +14,14 @@ mkdocs-azure-pipelines = "mkdocs_azure_pipelines:MkAzurePipelinesExtension"
 [project.urls]
 Repository = "https://github.com/Wesztman/mkdocs-azure-pipelines"
 
-[project.optional-dependencies]
-dev = ["tox~=4.12.1", "tox-pdm~=0.7.2", "pre-commit~=3.6.1"]
-lint = ["mypy~=1.8.0", "ruff~=0.2.1"]
-test = ["pytest~=8.0.0", "pytest-cov~=4.1.0", "coverage[toml]~=7.4.1"]
-all = [
-  "mkdocs-azure-pipelines[dev]",
-  "mkdocs-azure-pipelines[lint]",
-  "mkdocs-azure-pipelines[test]",
-  "mkdocs~=1.5.3",
+[dependency-groups]
+dev = [
+  "pre-commit~=4.1.0",
+  "pyright~=1.1.394",
+  "ruff~=0.9.7",
+  "pytest~=8.3.4",
+  "pytest-sugar>=1.0.0",
 ]
-
-[tool.pdm.scripts]
-format = "ruff format . --check"
-lint = "ruff check . --fix"
-typecheck = "mypy ."
-test = "pdm run pytest --cov mkdocs_azure_pipelines --cov-report term --cov-report html tests/ -v"
-all = { composite = ["format", "lint", "typecheck", "test"] }
 
 [tool.ruff]
 src = ["src"]
@@ -76,3 +63,7 @@ exclude = [".venv/", "build/", "dist/", "tests/"]
 
 [tool.coverage.run]
 omit = ["*tests*"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
