@@ -54,6 +54,7 @@ select = [
 "tests/**" = [
   "S101", # Use of `assert` detected
   "D103", # Missing docstring in public function
+  "E501", # Line too long
 ]
 "**/__init__.py" = [
   "F401", # Imported but unused
