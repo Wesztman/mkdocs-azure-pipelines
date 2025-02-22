@@ -56,7 +56,7 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
             ]  # Short hash
             return f"{path.stem}-{hashed_name}{path.suffix}"
 
-        def process_and_add_file(file_path: str):
+        def process_and_add_file(file_path: str) -> None:
             log.info(f"Processing file: {file_path}")
             md_content = process_pipeline_file(file_path)
             md_file_path = (
