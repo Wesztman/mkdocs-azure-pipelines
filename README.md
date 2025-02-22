@@ -20,7 +20,9 @@ When managing a large repository of pipeline template files, it can be difficult
 
 - [x] Establish a syntax for title, about, example, outputs etc.
 - [x] Create a Python script which can process a pipeline **template** and output a markdown file.
-- [ ] **In Progress**: Convert to a real installable markdown extensions for mkdocs and publish to PyPi.
+- [x] Convert to a real installable mkdocs plugin.
+- [ ] Update readme
+- [ ] Publish to PyPi when creating a release
 
 ### Phase 2: Automatic parameter and code parsing
 
