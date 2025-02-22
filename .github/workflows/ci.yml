@@ -11,6 +11,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  UV_PYTHON_PREFERENCE: system
+
 jobs:
   test:
     name: Test with Python ${{ matrix.py }} on ${{ matrix.os }}
