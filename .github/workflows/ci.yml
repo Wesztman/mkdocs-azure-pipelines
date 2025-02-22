@@ -1,4 +1,4 @@
-name: test
+name: ci
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ on:
     - cron: "0 8 * * *" # Every day at 8am UTC
 
 concurrency:
-  group: tox-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -33,9 +33,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.py }}
-      - name: Install PDM
-        run: python -m pip install pdm
+      - name: Install uv
+        run: python -m pip install uv
       - name: Install dependencies
         run: uv sync --all-extras
-      - name: Run tox
-        run: pdm run tox -p
+      - name: Run pytest
+        run: uv run pytest
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files
