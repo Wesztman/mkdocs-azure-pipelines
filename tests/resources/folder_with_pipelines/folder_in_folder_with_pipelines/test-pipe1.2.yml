@@ -18,15 +18,12 @@
 # **encouraging_message**: A message to encourage the user.
 #:::outputs-end:::
 
-#:::parameters-start:::
-#:::code-block:::
 parameters:
   - name: python_version # The version of Python to use.
     type: string
   - name: encouraging_message # The message to output.
     type: string
     default: "You look great today!"
-#:::parameters-end:::
 
 #:::code-start:::
 #:::code-block:::
