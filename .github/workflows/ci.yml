@@ -58,6 +58,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+      - name: Update version in pyproject.toml
+        run: sed -i -e "s/0.0.0/${GITHUB_REF#refs/*/}/" pyproject.toml
       - name: Build package
         run: uv build
       - name: Publish package
