@@ -20,14 +20,49 @@ def test_find_tags():
 
 
 def test_extract_section_content():
-    content = """#:::title-start:::\n# Title\n#:::title-end:::"""
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::code-block:::
+# Code block content
+#:::code-block:::
+"""
     assert extract_section_content(content, "title") == "Title"
+    assert (
+        extract_section_content(content, "code-block")
+        == "```yaml\nCode block content\n```"
+    )
 
     content = "No sections here"
     assert extract_section_content(content, "title") is None
 
-    content = """#:::code-start:::\n#:::code-block:::\n# Code\n#:::code-end:::"""
-    assert extract_section_content(content, "code") == "```yaml\nCode\n```"
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::code-start:::
+#:::code-block:::
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: ${{ parameters.python_version }}
+      addToPath: true
+      architecture: "x64"
+  - bash: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: "Install dependencies"
+  - bash: |
+      pip install pytest pytest-azurepipelines
+      pytest
+    displayName: "Run pytest"
+  - bash: |
+      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
+    displayName: "Output encouraging message"
+    name: output_encouraging_message
+#:::code-end:::
+"""
+    expected_code = '```yaml\nsteps:\n  - task: UsePythonVersion@0\n    inputs:\n      versionSpec: ${{ parameters.python_version }}\n      addToPath: true\n      architecture: "x64"\n  - bash: |\n      python -m pip install --upgrade pip\n      pip install -r requirements.txt\n    displayName: "Install dependencies"\n  - bash: |\n      pip install pytest pytest-azurepipelines\n      pytest\n    displayName: "Run pytest"\n  - bash: |\n      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"\n    displayName: "Output encouraging message"\n    name: output_encouraging_message\n```'
+    assert extract_section_content(content, "code") == expected_code
 
 
 def test_process_pipeline_file(tmp_path):
@@ -64,7 +99,7 @@ def test_process_pipeline_file_with_resources(tmp_path):
         result = f.read()
 
     # Assert specific content rather than entire files
-    assert "# Pytest pipeline step template" in result
+    assert "# Steps template" in result
     assert "## Parameters" in result
     assert "## Outputs" in result
     assert "## Example" in result

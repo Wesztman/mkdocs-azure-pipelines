@@ -1,6 +1,8 @@
 import re
+from io import StringIO
 
-import yaml
+import yaml as pyyaml
+from ruamel.yaml import YAML
 
 START_TAG_PATTERN = r"#:::(\w+)-start:::"
 END_TAG_PATTERN = r"#:::(\w+)-end:::"
@@ -11,8 +13,9 @@ ALLOWED_TAGS = [
     "about",
     "outputs",
     "example",
-    "code",
 ]
+
+yaml = YAML()
 
 
 def find_tags(expression: str, string: str) -> list:
@@ -29,22 +32,38 @@ def extract_section_content(content: str, section_name: str) -> str | None:
         if CODE_BLOCK_TAG in section_text:
             section_text = section_text.replace(CODE_BLOCK_TAG, "")
             return f"```yaml\n{section_text.strip()}\n```"
-
         return section_text.strip()
     return None
 
 
 def extract_parameters(content: str) -> str | None:
     try:
-        yaml_content = yaml.safe_load(content)
+        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
         if yaml_content is None:
             return None
         for key, value in yaml_content.items():
             if key == "parameters":
-                return f"```yaml\n{
-                    yaml.dump({key: value}, default_flow_style=False).strip()
-                }\n```"
-    except yaml.YAMLError as e:
+                stream = StringIO()
+                yaml.dump({key: value}, stream)
+                parameters_content = stream.getvalue().strip()
+                return f"```yaml\n{parameters_content}\n```"
+    except Exception as e:
+        print(f"Error parsing YAML: {e}")
+    return None
+
+
+def extract_code(content: str) -> str | None:
+    try:
+        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
+        if yaml_content is None:
+            return None
+        for key in ["steps", "jobs", "stages"]:
+            if key in yaml_content:
+                stream = StringIO()
+                yaml.dump({key: yaml_content[key]}, stream)
+                code_content = stream.getvalue().strip()
+                return f"```yaml\n{code_content}\n```"
+    except Exception as e:
         print(f"Error parsing YAML: {e}")
     return None
 
@@ -82,17 +101,23 @@ def process_pipeline_file(input_file: str) -> str | None:
     if title is not None:
         markdown_content += f"# {title}\n\n"
 
-    # Extract and add parameters
-    parameters = extract_parameters(content)
-    if parameters is not None:
-        markdown_content += "## Parameters\n\n"
-        markdown_content += f"{parameters}\n\n"
-
     # Extract and add other sections
     for section_name in ALLOWED_TAGS[1:]:  # Exclude title
         section_content = extract_section_content(content, section_name)
         if section_content is not None:
             markdown_content += f"## {section_name.capitalize()}\n\n"
             markdown_content += f"{section_content}\n\n"
+
+    # Extract and add parameters
+    parameters = extract_parameters(content)
+    if parameters is not None:
+        markdown_content += "## Parameters\n\n"
+        markdown_content += f"{parameters}\n\n"
+
+    # Extract and add code
+    code = extract_code(content)
+    if code is not None:
+        markdown_content += "## Code\n\n"
+        markdown_content += f"{code}\n\n"
 
     return markdown_content
