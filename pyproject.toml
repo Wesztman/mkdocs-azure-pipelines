@@ -6,10 +6,17 @@ description = "MkDocs plugin to generate documentation for Azure Pipelines/Templ
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Carl Westman", email = "carl.westman91@gmail.com" }]
-dependencies = [
-    "mkdocs~=1.6.1",
-    "ruamel-yaml>=0.18.10",
-]
+dependencies = ["mkdocs~=1.6.1", "ruamel-yaml>=0.18.10"]
+
+[build-system]
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
 
 [project.entry-points."mkdocs.plugins"]
 mkdocs-azure-pipelines = "mkdocs_azure_pipelines.plugin:AzurePipelinesPlugin"
