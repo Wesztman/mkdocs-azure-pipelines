@@ -3,6 +3,8 @@ import os
 from mkdocs_azure_pipelines.ado_pipe_to_md import (
     END_TAG_PATTERN,
     START_TAG_PATTERN,
+    extract_code,
+    extract_parameters,
     extract_pool,
     extract_section_content,
     extract_trigger,
@@ -99,11 +101,14 @@ def test_process_pipeline_file(tmp_path):
     assert process_pipeline_file(str(file)) is None
 
 
-def test_process_pipeline_file_with_resources(tmp_path):
+def test_process_full_pipeline_file(tmp_path):
     # Determine paths to test resources
     test_dir = os.path.dirname(os.path.abspath(__file__))
     resources_path = os.path.join(test_dir, "resources")
-    input_file = os.path.join(resources_path, "test-pipe.yml")
+    input_file = os.path.join(
+        resources_path,
+        "folder_with_pipelines/folder_in_folder_with_pipelines/full-pipeline.yml",
+    )
 
     # Run process_pipeline_file with input file and output to a temporary file
     output_file = os.path.join(tmp_path, "test-pipe.md")
@@ -117,10 +122,14 @@ def test_process_pipeline_file_with_resources(tmp_path):
         result = f.read()
 
     # Assert specific content rather than entire files
-    assert "# Steps template" in result
-    assert "## Parameters" in result
+    assert "# Full pipeline" in result
+    assert "## About" in result
     assert "## Outputs" in result
     assert "## Example" in result
+    assert "## Triggers" in result
+    assert "## Pool" in result
+    assert "## Variables" in result
+    assert "## Parameters" in result
     assert "## Code" in result
 
 
@@ -156,6 +165,41 @@ def test_extract_variables():
 """
     expected_variables = '```yaml\nvariables:\n  - name: tag\n    value: "$(Build.BuildNumber)"\n  - name: ImageName\n    value: "demo Image"\n  - name: python.version\n    value: "3.8"\n```'
     assert extract_variables(content) == expected_variables
+
+
+def test_extract_parameters():
+    content = """parameters:
+  - name: python_version
+    value: "3.8"
+  - name: encouraging_message
+    value: "You did great!"
+"""
+    expected_parameters = '```yaml\nparameters:\n  - name: python_version\n    value: "3.8"\n  - name: encouraging_message\n    value: "You did great!"\n```'
+    assert extract_parameters(content) == expected_parameters
+
+
+def test_extract_code():
+    content = """steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: ${{ parameters.python_version }}
+      addToPath: true
+      architecture: "x64"
+  - bash: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: "Install dependencies"
+  - bash: |
+      pip install pytest pytest-azurepipelines
+      pytest
+    displayName: "Run pytest"
+  - bash: |
+      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
+    displayName: "Output encouraging message"
+    name: output_encouraging_message
+"""
+    expected_code = '```yaml\nsteps:\n  - task: UsePythonVersion@0\n    inputs:\n      versionSpec: ${{ parameters.python_version }}\n      addToPath: true\n      architecture: "x64"\n  - bash: |\n      python -m pip install --upgrade pip\n      pip install -r requirements.txt\n    displayName: "Install dependencies"\n  - bash: |\n      pip install pytest pytest-azurepipelines\n      pytest\n    displayName: "Run pytest"\n  - bash: |\n      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"\n    displayName: "Output encouraging message"\n    name: output_encouraging_message\n```'
+    assert extract_code(content) == expected_code
 
 
 def test_process_pipeline_file_with_trigger_pool_variables(tmp_path):

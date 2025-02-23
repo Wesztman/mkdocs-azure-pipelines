@@ -1,7 +1,6 @@
 import re
 from io import StringIO
 
-import yaml as pyyaml
 from ruamel.yaml import YAML
 
 START_TAG_PATTERN = r"#:::(\w+)-start:::"
@@ -36,23 +35,29 @@ def extract_section_content(content: str, section_name: str) -> str | None:
 
 def extract_parameters(content: str) -> str | None:
     try:
-        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
-        if yaml_content is None:
+        yaml = YAML()
+        yaml.preserve_quotes = True
+        yaml.width = 1000
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml_content = yaml.load(content)
+        if yaml_content is None or "parameters" not in yaml_content:
             return None
-        for key, value in yaml_content.items():
-            if key == "parameters":
-                stream = StringIO()
-                yaml.dump({key: value}, stream)
-                parameters_content = stream.getvalue().strip()
-                return f"```yaml\n{parameters_content}\n```"
+        stream = StringIO()
+        yaml.dump({"parameters": yaml_content["parameters"]}, stream)
+        parameters_content = stream.getvalue().strip()
+        return f"```yaml\n{parameters_content}\n```"
     except Exception as e:
         print(f"Error parsing YAML: {e}")
-    return None
+        return None
 
 
 def extract_code(content: str) -> str | None:
     try:
-        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
+        yaml = YAML()
+        yaml.preserve_quotes = True
+        yaml.width = 1000
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml_content = yaml.load(content)
         if yaml_content is None:
             return None
         for key in ["steps", "jobs", "stages"]:
@@ -63,7 +68,7 @@ def extract_code(content: str) -> str | None:
                 return f"```yaml\n{code_content}\n```"
     except Exception as e:
         print(f"Error parsing YAML: {e}")
-    return None
+        return None
 
 
 def extract_trigger(content: str) -> str | None:
@@ -74,7 +79,6 @@ def extract_trigger(content: str) -> str | None:
         yaml.indent(mapping=2, sequence=4, offset=2)  # Ensure correct list indentation
 
         yaml_content = yaml.load(content)
-        print("Parsed YAML (with comments):", yaml_content)  # Debugging print
 
         if yaml_content is None or "trigger" not in yaml_content:
             return None
@@ -83,7 +87,6 @@ def extract_trigger(content: str) -> str | None:
         yaml.dump({"trigger": yaml_content["trigger"]}, stream)  # Preserves comments
         trigger_content = stream.getvalue().strip()
 
-        print("Extracted trigger (with comments):", trigger_content)  # Debugging print
         return f"```yaml\n{trigger_content}\n```"
 
     except Exception as e:
@@ -93,32 +96,38 @@ def extract_trigger(content: str) -> str | None:
 
 def extract_pool(content: str) -> str | None:
     try:
-        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
-        if yaml_content is None:
+        yaml = YAML()
+        yaml.preserve_quotes = True
+        yaml.width = 1000
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml_content = yaml.load(content)
+        if yaml_content is None or "pool" not in yaml_content:
             return None
-        if "pool" in yaml_content:
-            stream = StringIO()
-            yaml.dump({"pool": yaml_content["pool"]}, stream)
-            pool_content = stream.getvalue().strip()
-            return f"```yaml\n{pool_content}\n```"
+        stream = StringIO()
+        yaml.dump({"pool": yaml_content["pool"]}, stream)
+        pool_content = stream.getvalue().strip()
+        return f"```yaml\n{pool_content}\n```"
     except Exception as e:
         print(f"Error parsing YAML: {e}")
-    return None
+        return None
 
 
 def extract_variables(content: str) -> str | None:
     try:
-        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
-        if yaml_content is None:
+        yaml = YAML()
+        yaml.preserve_quotes = True
+        yaml.width = 1000
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml_content = yaml.load(content)
+        if yaml_content is None or "variables" not in yaml_content:
             return None
-        if "variables" in yaml_content:
-            stream = StringIO()
-            yaml.dump({"variables": yaml_content["variables"]}, stream)
-            variables_content = stream.getvalue().strip()
-            return f"```yaml\n{variables_content}\n```"
+        stream = StringIO()
+        yaml.dump({"variables": yaml_content["variables"]}, stream)
+        variables_content = stream.getvalue().strip()
+        return f"```yaml\n{variables_content}\n```"
     except Exception as e:
         print(f"Error parsing YAML: {e}")
-    return None
+        return None
 
 
 def process_pipeline_file(input_file: str) -> str | None:
