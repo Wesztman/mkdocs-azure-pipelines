@@ -1,7 +1,7 @@
 [project]
 name = "mkdocs-azure-pipelines"
 requires-python = ">=3.10"
-version = "0.0.0"
+version = "0.0.0" # This is replaced in release workflow
 description = "MkDocs plugin to generate documentation for Azure Pipelines/Templates"
 readme = "README.md"
 license = { file = "LICENSE" }
