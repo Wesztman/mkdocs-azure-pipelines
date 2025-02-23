@@ -3,7 +3,10 @@ import os
 from mkdocs_azure_pipelines.ado_pipe_to_md import (
     END_TAG_PATTERN,
     START_TAG_PATTERN,
+    extract_pool,
     extract_section_content,
+    extract_trigger,
+    extract_variables,
     find_tags,
     process_pipeline_file,
 )
@@ -119,3 +122,115 @@ def test_process_pipeline_file_with_resources(tmp_path):
     assert "## Outputs" in result
     assert "## Example" in result
     assert "## Code" in result
+
+
+def test_extract_trigger():
+    content = """trigger:
+  branches:
+    include:
+      - main
+    exclude:
+      - feature_branches
+"""
+    expected_trigger = "```yaml\ntrigger:\n  branches:\n    include:\n      - main\n    exclude:\n      - feature_branches\n```"
+
+    assert extract_trigger(content) == expected_trigger
+
+
+def test_extract_pool():
+    content = """pool:
+  vmImage: "ubuntu-latest"
+"""
+    expected_pool = '```yaml\npool:\n  vmImage: "ubuntu-latest"\n```'
+    assert extract_pool(content) == expected_pool
+
+
+def test_extract_variables():
+    content = """variables:
+  - name: tag
+    value: "$(Build.BuildNumber)"
+  - name: ImageName
+    value: "demo Image"
+  - name: python.version
+    value: "3.8"
+"""
+    expected_variables = '```yaml\nvariables:\n  - name: tag\n    value: "$(Build.BuildNumber)"\n  - name: ImageName\n    value: "demo Image"\n  - name: python.version\n    value: "3.8"\n```'
+    assert extract_variables(content) == expected_variables
+
+
+def test_process_pipeline_file_with_trigger_pool_variables(tmp_path):
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::example-start:::
+# Example content
+#:::example-end:::
+trigger:
+  branches:
+    include:
+      - main
+    exclude:
+      - feature_branches
+pool:
+  vmImage: "ubuntu-latest"
+variables:
+  - name: tag
+    value: "$(Build.BuildNumber)"
+  - name: ImageName
+    value: "demo Image"
+  - name: python.version
+    value: "3.8"
+parameters:
+  - name: python_version
+    type: string
+"""
+    file = tmp_path / "pipeline.yml"
+    file.write_text(content)
+    expected_output = """# Title
+
+## Example
+
+```yaml
+Example content
+```
+
+## Triggers
+
+```yaml
+trigger:
+  branches:
+    include:
+      - main
+    exclude:
+      - feature_branches
+```
+
+## Pool
+
+```yaml
+pool:
+  vmImage: "ubuntu-latest"
+```
+
+## Variables
+
+```yaml
+variables:
+  - name: tag
+    value: "$(Build.BuildNumber)"
+  - name: ImageName
+    value: "demo Image"
+  - name: python.version
+    value: "3.8"
+```
+
+## Parameters
+
+```yaml
+parameters:
+  - name: python_version
+    type: string
+```
+
+"""
+    assert process_pipeline_file(str(file)) == expected_output

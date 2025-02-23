@@ -68,17 +68,27 @@ def extract_code(content: str) -> str | None:
 
 def extract_trigger(content: str) -> str | None:
     try:
-        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
-        if yaml_content is None:
+        yaml = YAML()
+        yaml.preserve_quotes = True  # Keeps quotes as in the original YAML
+        yaml.width = 1000  # Prevents line wrapping
+        yaml.indent(mapping=2, sequence=4, offset=2)  # Ensure correct list indentation
+
+        yaml_content = yaml.load(content)
+        print("Parsed YAML (with comments):", yaml_content)  # Debugging print
+
+        if yaml_content is None or "trigger" not in yaml_content:
             return None
-        if "trigger" in yaml_content:
-            stream = StringIO()
-            yaml.dump({"trigger": yaml_content["trigger"]}, stream)
-            trigger_content = stream.getvalue().strip()
-            return f"```yaml\n{trigger_content}\n```"
+
+        stream = StringIO()
+        yaml.dump({"trigger": yaml_content["trigger"]}, stream)  # Preserves comments
+        trigger_content = stream.getvalue().strip()
+
+        print("Extracted trigger (with comments):", trigger_content)  # Debugging print
+        return f"```yaml\n{trigger_content}\n```"
+
     except Exception as e:
         print(f"Error parsing YAML: {e}")
-    return None
+        return None
 
 
 def extract_pool(content: str) -> str | None:

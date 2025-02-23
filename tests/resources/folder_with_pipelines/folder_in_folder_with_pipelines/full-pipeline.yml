@@ -20,7 +20,7 @@
 trigger:
   branches:
     include:
-      - main
+      - main # Change this to the branch you want to trigger on
     exclude:
       - feature_branches
 
