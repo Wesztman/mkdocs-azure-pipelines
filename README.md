@@ -29,6 +29,9 @@ plugins:
         - folder_with_pipelines
       output_dir: "Pipelines"
 ```
+The output dir is what will be showed in your documentation.
+
+![image](https://github.com/user-attachments/assets/703a50ec-3555-466a-9534-1d7d4d9de934)
 
 ## Why
 
