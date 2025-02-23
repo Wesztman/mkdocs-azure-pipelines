@@ -1,0 +1,69 @@
+#:::title-start:::
+# Full pipeline
+#:::title-end:::
+
+#:::about-start:::
+# This pipeline template is used to run pytest.
+#:::about-end:::
+
+#:::example-start:::
+# steps:
+# - template: pip-build-and-publish-step.yml@templates
+#   parameters:
+#     python_version: '3.6'
+#:::example-end:::
+
+#:::outputs-start:::
+# **encouraging_message**: A message to encourage the user.
+#:::outputs-end:::
+
+trigger:
+  branches:
+    include:
+      - main # Change this to the branch you want to trigger on
+    exclude:
+      - feature_branches
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  - name: tag
+    value: "$(Build.BuildNumber)"
+  - name: ImageName
+    value: "demo Image"
+  - name: python.version
+    value: "3.8"
+
+parameters:
+  - name: python_version # The version of Python to use.
+    type: string
+  - name: encouraging_message # The message to output.
+    type: string
+    default: "You look great today!"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: RunPytest
+        displayName: "Run pytest"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - template: steps-template-in-folder-in-folder.yml@templates
+            parameters:
+              python_version: ${{ parameters.python_version }}
+              encouraging_message: ${{ parameters.encouraging_message }}
+
+  - stage: Deploy
+    jobs:
+      - job: Deploy
+        displayName: "Deploy to Azure"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - script: echo "Deploying to Azure..."
+          - bash: |
+              echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
+            displayName: "Output encouraging message"
+            name: output_encouraging_message

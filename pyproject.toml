@@ -6,13 +6,22 @@ description = "MkDocs plugin to generate documentation for Azure Pipelines/Templ
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Carl Westman", email = "carl.westman91@gmail.com" }]
-dependencies = ["mkdocs~=1.6.1"]
+dependencies = [
+    "mkdocs~=1.6.1",
+    "ruamel-yaml>=0.18.10",
+]
 
-[project.entry-points."markdown.extensions"]
-mkdocs-azure-pipelines = "mkdocs_azure_pipelines:MkAzurePipelinesExtension"
+[project.entry-points."mkdocs.plugins"]
+mkdocs-azure-pipelines = "mkdocs_azure_pipelines.plugin:AzurePipelinesPlugin"
+
+[project.scripts]
+mkdocs-azure-pipelines = "mkdocs_azure_pipelines.cli:main"
 
 [project.urls]
 Repository = "https://github.com/Wesztman/mkdocs-azure-pipelines"
+
+[tool.uv]
+package = true
 
 [dependency-groups]
 dev = [
@@ -21,6 +30,7 @@ dev = [
   "ruff~=0.9.7",
   "pytest~=8.3.4",
   "pytest-sugar>=1.0.0",
+  "mkdocs-material>=9.6.5",
 ]
 
 [tool.ruff]
@@ -47,6 +57,7 @@ select = [
 "tests/**" = [
   "S101", # Use of `assert` detected
   "D103", # Missing docstring in public function
+  "E501", # Line too long
 ]
 "**/__init__.py" = [
   "F401", # Imported but unused

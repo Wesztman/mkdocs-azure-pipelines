@@ -1,0 +1,52 @@
+#:::title-start:::
+# Jobs template
+#:::title-end:::
+
+#:::about-start:::
+# This pipeline template is used to run pytest.
+#:::about-end:::
+
+#:::example-start:::
+# steps:
+# - template: pip-build-and-publish-step.yml@templates
+#   parameters:
+#     python_version: '3.6'
+#:::example-end:::
+
+#:::outputs-start:::
+# **encouraging_message**: A message to encourage the user.
+#:::outputs-end:::
+
+parameters:
+  - name: python_version # The version of Python to use.
+    type: string
+  - name: encouraging_message # The message to output.
+    type: string
+    default: "You look great today!"
+
+jobs:
+  - job: RunPytest
+    displayName: "Run pytest"
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: ${{ parameters.python_version }}
+          addToPath: true
+          architecture: "x64"
+
+      - bash: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        displayName: "Install dependencies"
+
+      - bash: |
+          pip install pytest pytest-azurepipelines
+          pytest
+        displayName: "Run pytest"
+
+      - bash: |
+          echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
+        displayName: "Output encouraging message"
+        name: output_encouraging_message
