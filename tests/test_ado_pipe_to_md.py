@@ -128,11 +128,11 @@ def test_extract_trigger():
     content = """trigger:
   branches:
     include:
-      - main
+      - main # Change this to the branch you want to trigger on
     exclude:
       - feature_branches
 """
-    expected_trigger = "```yaml\ntrigger:\n  branches:\n    include:\n      - main\n    exclude:\n      - feature_branches\n```"
+    expected_trigger = "```yaml\ntrigger:\n  branches:\n    include:\n      - main # Change this to the branch you want to trigger on\n    exclude:\n      - feature_branches\n```"
 
     assert extract_trigger(content) == expected_trigger
 
