@@ -23,24 +23,20 @@ def test_extract_section_content():
     content = """#:::title-start:::
 # Title
 #:::title-end:::
-#:::code-block:::
-# Code block content
-#:::code-block:::
+#:::example-start:::
+# Example content
+#:::example-end:::
 """
     assert extract_section_content(content, "title") == "Title"
     assert (
-        extract_section_content(content, "code-block")
-        == "```yaml\nCode block content\n```"
+        extract_section_content(content, "example") == "```yaml\nExample content\n```"
     )
-
     content = "No sections here"
     assert extract_section_content(content, "title") is None
-
     content = """#:::title-start:::
 # Title
 #:::title-end:::
-#:::code-start:::
-#:::code-block:::
+#:::example-start:::
 steps:
   - task: UsePythonVersion@0
     inputs:
@@ -59,24 +55,43 @@ steps:
       echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"
     displayName: "Output encouraging message"
     name: output_encouraging_message
-#:::code-end:::
+#:::example-end:::
 """
-    expected_code = '```yaml\nsteps:\n  - task: UsePythonVersion@0\n    inputs:\n      versionSpec: ${{ parameters.python_version }}\n      addToPath: true\n      architecture: "x64"\n  - bash: |\n      python -m pip install --upgrade pip\n      pip install -r requirements.txt\n    displayName: "Install dependencies"\n  - bash: |\n      pip install pytest pytest-azurepipelines\n      pytest\n    displayName: "Run pytest"\n  - bash: |\n      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"\n    displayName: "Output encouraging message"\n    name: output_encouraging_message\n```'
-    assert extract_section_content(content, "code") == expected_code
+    expected_example = '```yaml\nsteps:\n  - task: UsePythonVersion@0\n    inputs:\n      versionSpec: ${{ parameters.python_version }}\n      addToPath: true\n      architecture: "x64"\n  - bash: |\n      python -m pip install --upgrade pip\n      pip install -r requirements.txt\n    displayName: "Install dependencies"\n  - bash: |\n      pip install pytest pytest-azurepipelines\n      pytest\n    displayName: "Run pytest"\n  - bash: |\n      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"\n    displayName: "Output encouraging message"\n    name: output_encouraging_message\n```'
+    assert extract_section_content(content, "example") == expected_example
 
 
 def test_process_pipeline_file(tmp_path):
-    content = """#:::title-start:::\n# Title\n#:::title-end:::\n#:::about-start:::\n# About\n#:::about-end:::"""
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::about-start:::
+# About
+#:::about-end:::
+"""
     file = tmp_path / "pipeline.yml"
     file.write_text(content)
     expected_output = "# Title\n\n## About\n\nAbout\n\n"
     assert process_pipeline_file(str(file)) == expected_output
 
-    content = """#:::title-start:::\n# Title\n#:::title-end:::\n#:::invalid-start:::\n# Invalid\n#:::invalid-end:::"""
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::invalid-start:::
+# Invalid
+#:::invalid-end:::
+"""
     file.write_text(content)
     assert process_pipeline_file(str(file)) is None
 
-    content = """#:::title-start:::\n# Title\n#:::title-end:::\n#:::about-start:::\n# About\n#:::about-end:::\n#:::title-start:::"""
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::about-start:::
+# About
+#:::about-end:::
+#:::title-start:::
+"""
     file.write_text(content)
     assert process_pipeline_file(str(file)) is None
 

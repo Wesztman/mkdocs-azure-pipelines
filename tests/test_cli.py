@@ -10,7 +10,13 @@ def test_example():
 
 
 def test_main_valid_input_output():
-    content = """#:::title-start:::\n# Title\n#:::title-end:::\n#:::about-start:::\n# About\n#:::about-end:::"""
+    content = """#:::title-start:::
+# Title
+#:::title-end:::
+#:::about-start:::
+# About
+#:::about-end:::
+"""
     with tempfile.NamedTemporaryFile(delete=False) as input_file:
         input_file.write(content.encode())
         input_file_name = input_file.name
