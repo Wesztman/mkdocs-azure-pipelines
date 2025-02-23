@@ -32,11 +32,6 @@ When managing a large repository of pipeline template files, it can be difficult
 
 - [ ] Make the plugin document outputs based on the actual pipeline code, no need to use outputs-start and outputs-end tags/section.
 
-### Phase 4: Robustness and extras
-
-- [ ] Support different syntaxes for parameters i.e both with and without "name" and "type" keys.
-- [ ] Handle syntax errors gracefully with clear error messages.
-
 ### Phase 5: Any Azure Pipeline
 
 - [ ] Make the plugin work with any Azure Pipeline yaml file, not just templates. This means parsing variables, pool, trigger, resources etc.
