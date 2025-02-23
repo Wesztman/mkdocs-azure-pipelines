@@ -7,7 +7,6 @@
 #:::about-end:::
 
 #:::example-start:::
-#:::code-block:::
 # steps:
 # - template: pip-build-and-publish-step.yml@templates
 #   parameters:
