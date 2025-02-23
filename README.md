@@ -2,9 +2,10 @@
   <img src="https://github.com/Wesztman/mkdocs-azure-pipelines/assets/54413402/5d0e50ea-843a-4e63-8660-785371fd63d0" width="250">
 </p>
 
-[![tox](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/tox.yml/badge.svg)](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/tox.yml)
-![](https://img.shields.io/badge/Python-%3E=3.10-blue)
-![](https://img.shields.io/badge/Under%20Development%20-fc2803)
+[![Workflow](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/ci.yml/badge.svg)](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/ci.yml)
+![Python - Version](https://img.shields.io/badge/Python-3.10_|_3.11_|_3.12-blue)
+![PyPI - Version](https://img.shields.io/pypi/v/mkdocs-azure-pipelines)
+![Tested on OS](https://img.shields.io/badge/Tested_on_OS-Linux_|_Win_|_Mac-blue)
 
 # mkdocs-azure-pipelines
 
