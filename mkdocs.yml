@@ -1,4 +1,4 @@
-site_name: "Test MkDocs Azure Pipelines Plugin"
+site_name: "MkDocs Azure Pipelines Plugin"
 
 theme:
   name: "material"

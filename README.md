@@ -7,9 +7,28 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/mkdocs-azure-pipelines)
 ![Tested on OS](https://img.shields.io/badge/Tested_on_OS-Linux_|_Win_|_Mac-blue)
 
-# mkdocs-azure-pipelines
+# About
 
 Generate mkdocs documentation from Azure Pipelines yaml files.
+
+Install the plugin:
+
+```bash
+pip install mkdocs-azure-pipelines
+```
+
+Add the plugin to your `mkdocs.yml`, you can choose input files and directories to process. For now you can only specify a single output directory.
+
+```yaml
+plugins:
+  - mkdocs-azure-pipelines:
+      input_files:
+        - steps-template.yml
+        - jobs-template.yml
+      input_dirs:
+        - folder_with_pipelines
+      output_dir: "Pipelines"
+```
 
 ## Why
 
