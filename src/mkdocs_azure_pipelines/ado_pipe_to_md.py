@@ -66,6 +66,51 @@ def extract_code(content: str) -> str | None:
     return None
 
 
+def extract_trigger(content: str) -> str | None:
+    try:
+        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
+        if yaml_content is None:
+            return None
+        if "trigger" in yaml_content:
+            stream = StringIO()
+            yaml.dump({"trigger": yaml_content["trigger"]}, stream)
+            trigger_content = stream.getvalue().strip()
+            return f"```yaml\n{trigger_content}\n```"
+    except Exception as e:
+        print(f"Error parsing YAML: {e}")
+    return None
+
+
+def extract_pool(content: str) -> str | None:
+    try:
+        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
+        if yaml_content is None:
+            return None
+        if "pool" in yaml_content:
+            stream = StringIO()
+            yaml.dump({"pool": yaml_content["pool"]}, stream)
+            pool_content = stream.getvalue().strip()
+            return f"```yaml\n{pool_content}\n```"
+    except Exception as e:
+        print(f"Error parsing YAML: {e}")
+    return None
+
+
+def extract_variables(content: str) -> str | None:
+    try:
+        yaml_content = pyyaml.load(content, Loader=pyyaml.FullLoader)
+        if yaml_content is None:
+            return None
+        if "variables" in yaml_content:
+            stream = StringIO()
+            yaml.dump({"variables": yaml_content["variables"]}, stream)
+            variables_content = stream.getvalue().strip()
+            return f"```yaml\n{variables_content}\n```"
+    except Exception as e:
+        print(f"Error parsing YAML: {e}")
+    return None
+
+
 def process_pipeline_file(input_file: str) -> str | None:
     # Read the input pipeline file
     with open(input_file, encoding="utf-8") as f:
@@ -98,6 +143,21 @@ def process_pipeline_file(input_file: str) -> str | None:
         if section_content is not None:
             markdown_content += f"## {section_name.capitalize()}\n\n"
             markdown_content += f"{section_content}\n\n"
+    # Extract and add trigger
+    trigger = extract_trigger(content)
+    if trigger is not None:
+        markdown_content += "## Triggers\n\n"
+        markdown_content += f"{trigger}\n\n"
+    # Extract and add pool
+    pool = extract_pool(content)
+    if pool is not None:
+        markdown_content += "## Pool\n\n"
+        markdown_content += f"{pool}\n\n"
+    # Extract and add variables
+    variables = extract_variables(content)
+    if variables is not None:
+        markdown_content += "## Variables\n\n"
+        markdown_content += f"{variables}\n\n"
     # Extract and add parameters
     parameters = extract_parameters(content)
     if parameters is not None:
