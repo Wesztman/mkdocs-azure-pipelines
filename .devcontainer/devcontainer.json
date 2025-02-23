@@ -14,7 +14,6 @@
       "extensions": [
         "ms-python.python",
         "aaron-bond.better-comments",
-        "SonarSource.sonarlint-vscode",
         "yzhang.markdown-all-in-one",
         "streetsidesoftware.code-spell-checker",
         "tamasfe.even-better-toml",
