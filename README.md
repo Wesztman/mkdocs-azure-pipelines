@@ -6,7 +6,7 @@
 ![GitHub License](https://img.shields.io/github/license/wesztman/mkdocs-azure-pipelines)
 [![Workflow](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/ci.yml/badge.svg)](https://github.com/Wesztman/mkdocs-azure-pipelines/actions/workflows/ci.yml)
 ![Python - Version](https://img.shields.io/badge/Python-3.10_|_3.11_|_3.12-blue)
-![PyPI - Version](https://img.shields.io/pypi/v/mkdocs-azure-pipelines)
+[![PyPI - Version](https://img.shields.io/pypi/v/mkdocs-azure-pipelines)](https://pypi.org/project/mkdocs-azure-pipelines/)
 ![Tested on OS](https://img.shields.io/badge/Tested_on_OS-Linux_|_Win_|_Mac-blue)
 
 # About
