@@ -70,9 +70,14 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
                     content=md_content,
                 )
                 files.append(new_md_file)
-                log.debug(f"mkdocs-azure-pipelines: New md file generated: {md_file_path}")
+                log.debug(
+                    f"mkdocs-azure-pipelines: New md file generated: {md_file_path}"
+                )
             else:
-                log.debug(f"mkdocs-azure-pipelines: No content generated for file: {file_path}")
+                log.debug(
+                    f"mkdocs-azure-pipelines: No content generated for file: "
+                    f"{file_path}"
+                )
 
         # Get all files to be processed using cached result
         all_files = get_all_files(
