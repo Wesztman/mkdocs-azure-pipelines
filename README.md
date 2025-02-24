@@ -117,6 +117,10 @@ This pipeline template is used to install pip deps and cache them.
 Pipeline/template code starts here...
 ````
 
+### Debugging
+
+If you are having issues with the plugin, you can run `mkdocs build` and `mkdocs serve` with the `--verbose` flag to get more information about what the plugin is doing. All logs from the plugin should be prefixed with `mkdocs-azure-pipelines: `.
+
 ## Contributing
 
 Contributions are welcome! If you find any bugs or have a feature request, please open an issue or even better, a pull request 🥳
