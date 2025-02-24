@@ -15,6 +15,7 @@
 > This project is still in the early stages of development, while it works there might be
 > bugs and missing features. There might also be breaking changes between versions, please
 > pin the version of the plugin to avoid issues.
+> I've not yet tried running it on a pipeline >with jinja style template expressions. 
 
 Generate mkdocs documentation from Azure Pipelines yaml files.
 
