@@ -37,7 +37,7 @@ def get_all_files(input_files: tuple[str], input_dirs: tuple[str]) -> list:
 
     # Add files from input_dirs (looking for *.yml files)
     for dir in input_dirs:
-        log.info(f"Processing directory: {dir}")
+        log.debug(f"mkdocs-azure-pipelines: Processing directory: {dir}")
         for file in Path(dir).rglob("*.yml"):
             files_to_process.append(str(file))
 
@@ -46,8 +46,7 @@ def get_all_files(input_files: tuple[str], input_dirs: tuple[str]) -> list:
 
 class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
     def on_files(self, files: Files, /, *, config: MkDocsConfig) -> Files:
-        log.info("Now in on_files")
-        log.info(f"Output dir: {self.config.output_dir}")
+        log.debug(f"mkdocs-azure-pipelines: Output dir: {self.config.output_dir}")
 
         def unique_filename(file_path: str) -> str:
             path = Path(file_path)
@@ -57,7 +56,7 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
             return f"{path.stem}-{hashed_name}{path.suffix}"
 
         def process_and_add_file(file_path: str) -> None:
-            log.info(f"Processing file: {file_path}")
+            log.debug(f"mkdocs-azure-pipelines: Processing file: {file_path}")
             md_content = process_pipeline_file(file_path)
             md_file_path = (
                 f"{self.config.output_dir}/{unique_filename(file_path)}".replace(
@@ -71,9 +70,9 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
                     content=md_content,
                 )
                 files.append(new_md_file)
-                log.info(f"New md file generated: {md_file_path}")
+                log.debug(f"mkdocs-azure-pipelines: New md file generated: {md_file_path}")
             else:
-                log.info(f"No content generated for file: {file_path}")
+                log.debug(f"mkdocs-azure-pipelines: No content generated for file: {file_path}")
 
         # Get all files to be processed using cached result
         all_files = get_all_files(
@@ -89,8 +88,6 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
     def on_serve(
         self, server: LiveReloadServer, /, *, config: MkDocsConfig, builder: Callable
     ) -> LiveReloadServer:
-        log.info("Now in on_serve")
-
         # Get the list of files to watch from get_all_files
         all_files = get_all_files(
             tuple(self.config.input_files), tuple(self.config.input_dirs)
@@ -99,6 +96,6 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
         # Watch each file returned from get_all_files
         for file_path in all_files:
             server.watch(file_path)  # Watch the file directly
-            log.info(f"Watching file: {file_path}")
+            log.debug(f"mkdocs-azure-pipelines: Adding files to watch: {file_path}")
 
         return server
