@@ -150,7 +150,7 @@ uv run pytest
 If you want to be sure that your code is properly formatted and linted before committing, you can install the pre-commit hooks.
 
 ```bash
-uv run run pre-commit install
+uv run pre-commit install
 ```
 
 This will stop you from committing if the code is not properly formatted or linted.
