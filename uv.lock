@@ -291,6 +291,7 @@ wheels = [
 
 [[package]]
 name = "mkdocs-azure-pipelines"
+version = "0.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "mkdocs" },

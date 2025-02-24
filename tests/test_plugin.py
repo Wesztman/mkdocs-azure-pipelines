@@ -1,9 +1,11 @@
 from unittest.mock import Mock
 
+import pytest
 from mkdocs.structure.files import Files
 
 from mkdocs_azure_pipelines.plugin import (
     AzurePipelinesPlugin,
+    ConfigurationError,
     PluginConfig,
     get_all_files,
 )
@@ -77,3 +79,13 @@ def test_azure_pipelines_plugin_on_serve(tmp_path):
 
     # Check that the file is being watched
     server.watch.assert_called_with(str(pipeline_file))
+
+
+def test_azure_pipelines_plugin_on_config_raises_exception():
+    plugin = AzurePipelinesPlugin()
+    plugin.config = PluginConfig()  # type: ignore
+    with pytest.raises(
+        ConfigurationError,
+        match="At least one input_files or input_dirs must be specified.",
+    ):
+        plugin.on_config(Mock())

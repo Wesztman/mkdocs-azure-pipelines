@@ -7,6 +7,7 @@ from pathlib import Path
 from mkdocs.config import config_options
 from mkdocs.config.base import Config
 from mkdocs.config.defaults import MkDocsConfig
+from mkdocs.exceptions import ConfigurationError
 from mkdocs.livereload import LiveReloadServer
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import File, Files
@@ -17,8 +18,12 @@ log = logging.getLogger(f"mkdocs.plugins.{__name__}")
 
 
 class PluginConfig(Config):
-    input_files = config_options.ListOfItems(config_options.File(exists=True))
-    input_dirs = config_options.ListOfItems(config_options.Dir(exists=True))
+    input_files = config_options.Optional(
+        config_options.ListOfItems(config_options.File(exists=True))
+    )
+    input_dirs = config_options.Optional(
+        config_options.ListOfItems(config_options.Dir(exists=True))
+    )
     output_dir = config_options.Type(str, default="pipelines")
 
 
@@ -45,6 +50,15 @@ def get_all_files(input_files: tuple[str], input_dirs: tuple[str]) -> list:
 
 
 class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
+    def on_config(self, config: MkDocsConfig) -> MkDocsConfig | None:
+        if not self.config.input_files and not self.config.input_dirs:
+            raise ConfigurationError(
+                "mkdocs-azure-pipelines: "
+                "At least one input_files or input_dirs must be specified."
+            )
+
+        return config
+
     def on_files(self, files: Files, /, *, config: MkDocsConfig) -> Files:
         log.debug(f"mkdocs-azure-pipelines: Output dir: {self.config.output_dir}")
 
@@ -81,7 +95,7 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
 
         # Get all files to be processed using cached result
         all_files = get_all_files(
-            tuple(self.config.input_files), tuple(self.config.input_dirs)
+            tuple(self.config.input_files or ()), tuple(self.config.input_dirs or ())
         )
 
         # Process each file in the list
@@ -95,9 +109,8 @@ class AzurePipelinesPlugin(BasePlugin[PluginConfig]):
     ) -> LiveReloadServer:
         # Get the list of files to watch from get_all_files
         all_files = get_all_files(
-            tuple(self.config.input_files), tuple(self.config.input_dirs)
+            tuple(self.config.input_files or ()), tuple(self.config.input_dirs or ())
         )
-
         # Watch each file returned from get_all_files
         for file_path in all_files:
             server.watch(file_path)  # Watch the file directly
