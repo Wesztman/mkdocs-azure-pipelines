@@ -29,6 +29,11 @@ Install the plugin:
 ```bash
 pip install mkdocs-azure-pipelines
 ```
+or
+```bash
+uv add mkdocs-azure-pipelines
+```
+
 
 Add the plugin to your `mkdocs.yml`, you can choose input files and directories to process.
 
