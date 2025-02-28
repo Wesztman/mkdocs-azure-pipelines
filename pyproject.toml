@@ -1,7 +1,7 @@
 [project]
 name = "mkdocs-azure-pipelines"
 requires-python = ">=3.10"
-version = "0.0.0" # This is replaced in release workflow
+version = "0.0.0"                                                                     # This is replaced in release workflow
 description = "MkDocs plugin to generate documentation for Azure Pipelines/Templates"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -11,7 +11,6 @@ dependencies = ["mkdocs~=1.6.1", "ruamel-yaml>=0.18.10"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
 
 [tool.uv-dynamic-versioning]
 vcs = "git"
@@ -37,6 +36,7 @@ dev = [
   "pytest~=8.3.4",
   "pytest-sugar>=1.0.0",
   "mkdocs-material>=9.6.5",
+  "pytest-cov>=6.0.0",
 ]
 
 [tool.ruff]
@@ -81,6 +81,12 @@ exclude = [".venv/", "build/", "dist/", "tests/"]
 [tool.coverage.run]
 omit = ["*tests*"]
 
+[tool.coverage.report]
+skip_empty = true
+
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+
+[tool.pytest.ini_options]
+addopts = ["--cov=src"]
