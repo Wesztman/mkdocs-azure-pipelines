@@ -158,14 +158,15 @@ def process_pipeline_file(input_file: str) -> str | None:
     if title is not None:
         markdown_content += f"# {title}\n\n"
     else:
-        markdown_content += f"# {
+        processed_filename = (
             Path(input_file)
             .stem.capitalize()
-            .replace('_', ' ')
-            .replace('-', ' ')
-            .replace('.', ' ')
+            .replace("_", " ")
+            .replace("-", " ")
+            .replace(".", " ")
             .strip()
-        }\n\n"
+        )
+        markdown_content += f"# {processed_filename}\n\n"
     # Extract and add other sections
     for section_name in ALLOWED_TAGS[1:]:  # Exclude title
         section_content = extract_section_content(content, section_name)
