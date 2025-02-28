@@ -1,6 +1,7 @@
 import re
 from io import StringIO
 from pathlib import Path
+
 from ruamel.yaml import YAML
 
 START_TAG_PATTERN = r"#:::(\w+)-start:::"
@@ -157,9 +158,6 @@ def process_pipeline_file(input_file: str) -> str | None:
     if title is not None:
         markdown_content += f"# {title}\n\n"
     else:
-        # Create a title from the file name, removing the extension,
-        # capitalizing the first letter, replacing underscores, hyphens, and dots with spaces
-        # and removing any leading or trailing spaces
         markdown_content += f"# {
             Path(input_file)
             .stem.capitalize()
