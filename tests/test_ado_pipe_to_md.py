@@ -278,3 +278,36 @@ parameters:
 
 """
     assert process_pipeline_file(str(file)) == expected_output
+
+
+def test_process_pipeline_file_without_title(tmp_path):
+    # Create a dummy YAML file content with no title section
+    content = """#:::about-start:::
+# About
+#:::about-end:::
+#:::example-start:::
+# steps:
+#   - script: echo "Hello, World!"
+#     displayName: "Say Hello"
+#:::example-end:::
+"""
+
+    # Write this content to a temporary file
+    file_name = "example_pipeline.yml"
+    file_path = tmp_path / file_name
+    file_path.write_text(content)
+
+    # Process the file
+    result = process_pipeline_file(str(file_path))
+
+    # Expect the title to be generated from the file name
+    expected_title = "# Example pipeline\n\n"
+    expected_output = (
+        expected_title
+        + "## About\n\nAbout\n\n"
+        + "## Example\n\n"
+        + '```yaml\nsteps:\n  - script: echo "Hello, World!"\n    displayName: "Say Hello"\n```\n\n'
+    )
+    print(result)
+    # Assert that the generated markdown content matches the expected output
+    assert result == expected_output
