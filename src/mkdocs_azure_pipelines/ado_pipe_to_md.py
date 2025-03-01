@@ -14,130 +14,121 @@ ALLOWED_TAGS = [
     "example",
 ]
 
-yaml = YAML()
+
+def get_yaml_instance() -> YAML:
+    """
+    Create and return a YAML instance with common configuration.
+    """
+    yaml = YAML()
+    yaml.preserve_quotes = True
+    yaml.width = 1000
+    yaml.indent(mapping=2, sequence=4, offset=2)
+    return yaml
 
 
-def find_tags(expression: str, string: str) -> list:
-    return re.findall(expression, string)
+def find_tags(pattern: str, text: str) -> list:
+    """
+    Find all tags in text matching the given regex pattern.
+    """
+    return re.findall(pattern, text)
 
 
 def extract_section_content(content: str, section_name: str) -> str | None:
+    """
+    Extract content between start and end tags for a given section.
+    If section_name is "example", wraps the content in a YAML code block.
+    Removes only the initial "# " from each line while preserving additional spaces.
+    """
     pattern = rf"#:::{section_name}-start:::(.*?)#:::{section_name}-end:::"
     match = re.search(pattern, content, re.DOTALL)
     if match:
-        section_text = match.group(1).strip()
-        section_text = re.sub(r"^# ", "", section_text, flags=re.MULTILINE)
-        # Wrap the example section in a code block
+        section_text = match.group(1).lstrip("\n").rstrip("\n")
+        # Remove only the first occurrence of "# " from each line.
+        section_text = re.sub(r"^(\s*)#\s", r"\1", section_text, flags=re.MULTILINE)
         if section_name == "example":
             return f"```yaml\n{section_text}\n```"
-        return section_text.strip()
+        return section_text
     return None
 
 
-def extract_parameters(content: str) -> str | None:
+def extract_yaml_field(content: str, field: str) -> str | None:
+    """
+    Extract a YAML field from the content and return it as a YAML code block.
+    """
     try:
-        yaml = YAML()
-        yaml.preserve_quotes = True
-        yaml.width = 1000
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml_content = yaml.load(content)
-        if yaml_content is None or "parameters" not in yaml_content:
+        yaml = get_yaml_instance()
+        data = yaml.load(content)
+        if not data or field not in data:
             return None
         stream = StringIO()
-        yaml.dump({"parameters": yaml_content["parameters"]}, stream)
-        parameters_content = stream.getvalue().strip()
-        return f"```yaml\n{parameters_content}\n```"
+        yaml.dump({field: data[field]}, stream)
+        return f"```yaml\n{stream.getvalue().strip()}\n```"
     except Exception as e:
-        print(f"Error parsing YAML: {e}")
+        print(f"Error parsing YAML for field '{field}': {e}")
         return None
 
 
-def extract_code(content: str) -> str | None:
-    try:
-        yaml = YAML()
-        yaml.preserve_quotes = True
-        yaml.width = 1000
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml_content = yaml.load(content)
-        if yaml_content is None:
-            return None
-        for key in ["steps", "jobs", "stages"]:
-            if key in yaml_content:
-                stream = StringIO()
-                yaml.dump({key: yaml_content[key]}, stream)
-                code_content = stream.getvalue().strip()
-                return f"```yaml\n{code_content}\n```"
-    except Exception as e:
-        print(f"Error parsing YAML: {e}")
-        return None
+def extract_parameters(content: str) -> str | None:
+    """
+    Extract the 'parameters' field from the YAML content.
+    """
+    return extract_yaml_field(content, "parameters")
 
 
 def extract_trigger(content: str) -> str | None:
-    try:
-        yaml = YAML()
-        yaml.preserve_quotes = True  # Keeps quotes as in the original YAML
-        yaml.width = 1000  # Prevents line wrapping
-        yaml.indent(mapping=2, sequence=4, offset=2)  # Ensure correct list indentation
-
-        yaml_content = yaml.load(content)
-
-        if yaml_content is None or "trigger" not in yaml_content:
-            return None
-
-        stream = StringIO()
-        yaml.dump({"trigger": yaml_content["trigger"]}, stream)  # Preserves comments
-        trigger_content = stream.getvalue().strip()
-
-        return f"```yaml\n{trigger_content}\n```"
-
-    except Exception as e:
-        print(f"Error parsing YAML: {e}")
-        return None
+    """
+    Extract the 'trigger' field from the YAML content.
+    """
+    return extract_yaml_field(content, "trigger")
 
 
 def extract_pool(content: str) -> str | None:
-    try:
-        yaml = YAML()
-        yaml.preserve_quotes = True
-        yaml.width = 1000
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml_content = yaml.load(content)
-        if yaml_content is None or "pool" not in yaml_content:
-            return None
-        stream = StringIO()
-        yaml.dump({"pool": yaml_content["pool"]}, stream)
-        pool_content = stream.getvalue().strip()
-        return f"```yaml\n{pool_content}\n```"
-    except Exception as e:
-        print(f"Error parsing YAML: {e}")
-        return None
+    """
+    Extract the 'pool' field from the YAML content.
+    """
+    return extract_yaml_field(content, "pool")
 
 
 def extract_variables(content: str) -> str | None:
+    """
+    Extract the 'variables' field from the YAML content.
+    """
+    return extract_yaml_field(content, "variables")
+
+
+def extract_code(content: str) -> str | None:
+    """
+    Extract code sections from the YAML content using one of the keys:
+    'steps', 'jobs', or 'stages'.
+    """
     try:
-        yaml = YAML()
-        yaml.preserve_quotes = True
-        yaml.width = 1000
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml_content = yaml.load(content)
-        if yaml_content is None or "variables" not in yaml_content:
+        yaml = get_yaml_instance()
+        data = yaml.load(content)
+        if not data:
             return None
-        stream = StringIO()
-        yaml.dump({"variables": yaml_content["variables"]}, stream)
-        variables_content = stream.getvalue().strip()
-        return f"```yaml\n{variables_content}\n```"
+        for key in ["steps", "jobs", "stages"]:
+            if key in data:
+                stream = StringIO()
+                yaml.dump({key: data[key]}, stream)
+                return f"```yaml\n{stream.getvalue().strip()}\n```"
+        return None
     except Exception as e:
-        print(f"Error parsing YAML: {e}")
+        print(f"Error parsing YAML for code: {e}")
         return None
 
 
 def process_pipeline_file(input_file: str) -> str | None:
-    # Read the input pipeline file
+    """
+    Process a pipeline file to generate Markdown documentation.
+    Validates tag usage and extracts various sections and YAML blocks.
+    """
     with open(input_file, encoding="utf-8") as f:
         content = f.read()
+
     start_tags = find_tags(START_TAG_PATTERN, content)
     end_tags = find_tags(END_TAG_PATTERN, content)
-    # Check for misspelled tags or tag mismatches
+
+    # Validate tags
     if any(tag not in ALLOWED_TAGS for tag in start_tags):
         print("Found misspelled start tags.")
         print("Allowed tags are:", ", ".join(ALLOWED_TAGS))
@@ -151,8 +142,9 @@ def process_pipeline_file(input_file: str) -> str | None:
         print("Start tags:", start_tags)
         print("End tags:", end_tags)
         return None
-    # Create Markdown documentation
+
     markdown_content = ""
+
     # Extract and add title
     title = extract_section_content(content, "title")
     if title is not None:
@@ -167,35 +159,25 @@ def process_pipeline_file(input_file: str) -> str | None:
             .strip()
         )
         markdown_content += f"# {processed_filename}\n\n"
-    # Extract and add other sections
-    for section_name in ALLOWED_TAGS[1:]:  # Exclude title
+
+    # Extract and add allowed sections (excluding title)
+    for section_name in ALLOWED_TAGS[1:]:
         section_content = extract_section_content(content, section_name)
         if section_content is not None:
-            markdown_content += f"## {section_name.capitalize()}\n\n"
-            markdown_content += f"{section_content}\n\n"
-    # Extract and add trigger
-    trigger = extract_trigger(content)
-    if trigger is not None:
-        markdown_content += "## Triggers\n\n"
-        markdown_content += f"{trigger}\n\n"
-    # Extract and add pool
-    pool = extract_pool(content)
-    if pool is not None:
-        markdown_content += "## Pool\n\n"
-        markdown_content += f"{pool}\n\n"
-    # Extract and add variables
-    variables = extract_variables(content)
-    if variables is not None:
-        markdown_content += "## Variables\n\n"
-        markdown_content += f"{variables}\n\n"
-    # Extract and add parameters
-    parameters = extract_parameters(content)
-    if parameters is not None:
-        markdown_content += "## Parameters\n\n"
-        markdown_content += f"{parameters}\n\n"
-    # Extract and add code
-    code = extract_code(content)
-    if code is not None:
-        markdown_content += "## Code\n\n"
-        markdown_content += f"{code}\n\n"
+            markdown_content += (
+                f"## {section_name.capitalize()}\n\n{section_content}\n\n"
+            )
+
+    # Extract and add additional YAML fields
+    for extractor, header in [
+        (extract_trigger, "Triggers"),
+        (extract_pool, "Pool"),
+        (extract_variables, "Variables"),
+        (extract_parameters, "Parameters"),
+        (extract_code, "Code"),
+    ]:
+        result = extractor(content)
+        if result is not None:
+            markdown_content += f"## {header}\n\n{result}\n\n"
+
     return markdown_content
