@@ -311,3 +311,97 @@ def test_process_pipeline_file_without_title(tmp_path):
     print(result)
     # Assert that the generated markdown content matches the expected output
     assert result == expected_output
+
+
+def test_malformed_yaml_extractors():
+    """Test that YAML extraction functions return None for malformed YAML."""
+    malformed_content = "not: valid: yaml: :"
+    assert extract_parameters(malformed_content) is None
+    assert extract_trigger(malformed_content) is None
+    assert extract_pool(malformed_content) is None
+    assert extract_variables(malformed_content) is None
+    assert extract_code(malformed_content) is None
+
+
+def test_multiple_section_occurrences():
+    """Test that only the first occurrence of a section is extracted."""
+    content = """
+#:::title-start:::
+# First Title
+#:::title-end:::
+Some intermediate text.
+#:::title-start:::
+# Second Title
+#:::title-end:::
+"""
+    # Should extract the first title only
+    assert extract_section_content(content, "title") == "First Title"
+
+
+def test_empty_yaml_block_parameters():
+    """Test extraction when the YAML 'parameters' key exists but is empty."""
+    content = "parameters:"
+    expected = "```yaml\nparameters:\n```"
+    assert extract_parameters(content) == expected
+
+
+def test_empty_yaml_block_trigger():
+    """Test extraction when the YAML 'trigger' key exists but is empty."""
+    content = "trigger:"
+    expected = "```yaml\ntrigger:\n```"
+    assert extract_trigger(content) == expected
+
+
+def test_empty_yaml_block_pool():
+    """Test extraction when the YAML 'pool' key exists but is empty."""
+    content = "pool:"
+    expected = "```yaml\npool:\n```"
+    assert extract_pool(content) == expected
+
+
+def test_empty_yaml_block_variables():
+    """Test extraction when the YAML 'variables' key exists but is empty."""
+    content = "variables:"
+    expected = "```yaml\nvariables:\n```"
+    assert extract_variables(content) == expected
+
+
+def test_title_generation_from_filename(tmp_path):
+    """Test that a missing title section generates a title from the filename."""
+    filename = "my_test-pipeline.yml"
+    content = """
+#:::about-start:::
+# This is an about section.
+#:::about-end:::
+"""
+    file = tmp_path / filename
+    file.write_text(content)
+    result = process_pipeline_file(str(file))
+    expected_title = "# My test pipeline\n\n"
+    assert result is not None and result.startswith(expected_title)
+
+
+def test_whitespace_formatting_in_section():
+    """Test that extra whitespace and leading '#' characters are handled correctly."""
+    content = """
+#:::about-start:::
+#    This line has extra spaces
+#    And another line
+#:::about-end:::
+"""
+    # The regex only strips leading "# " exactly.
+    # The expected content retains the indentation.
+    expected = "   This line has extra spaces\n   And another line"
+    assert extract_section_content(content, "about") == expected
+
+
+def test_non_standard_tag_format(tmp_path):
+    """Test that tags with non-standard casing are rejected."""
+    content = """#:::Title-start:::
+# Title
+#:::Title-end:::
+"""
+    file = tmp_path / "pipeline.yml"
+    file.write_text(content)
+    # Since allowed tags are lowercase, this should result in a tag mismatch error.
+    assert process_pipeline_file(str(file)) is None
