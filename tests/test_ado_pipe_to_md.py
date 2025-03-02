@@ -3,9 +3,6 @@ import os
 from mkdocs_azure_pipelines.ado_pipe_to_md import (
     END_TAG_PATTERN,
     START_TAG_PATTERN,
-    # extract_code,
-    # extract_parameters,
-    # extract_pool,
     extract_section_content,
     extract_yaml_section,
     find_tags,
