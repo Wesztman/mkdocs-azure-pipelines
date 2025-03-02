@@ -24,6 +24,19 @@ trigger:
     exclude:
       - feature_branches
 
+resources:
+  repositories:
+    - repository: common
+      type: github
+      name: Contoso/CommonTools
+      endpoint: MyContosoServiceConnection
+  builds:
+    - build: Spaceworkz
+      type: Jenkins
+      connection: MyJenkinsServer
+      source: SpaceworkzProj # name of the Jenkins source project
+      trigger: true
+
 pool:
   vmImage: "ubuntu-latest"
 

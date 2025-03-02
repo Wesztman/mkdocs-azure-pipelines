@@ -82,6 +82,13 @@ def extract_trigger(content: str) -> str | None:
     return extract_yaml_field(content, "trigger")
 
 
+def extract_resources(content: str) -> str | None:
+    """
+    Extract the 'resources' field from the YAML content.
+    """
+    return extract_yaml_field(content, "resources")
+
+
 def extract_pool(content: str) -> str | None:
     """
     Extract the 'pool' field from the YAML content.
@@ -171,6 +178,7 @@ def process_pipeline_file(input_file: str) -> str | None:
     # Extract and add additional YAML fields
     for extractor, header in [
         (extract_trigger, "Triggers"),
+        (extract_resources, "Resources"),
         (extract_pool, "Pool"),
         (extract_variables, "Variables"),
         (extract_parameters, "Parameters"),
