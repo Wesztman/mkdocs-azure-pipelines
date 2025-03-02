@@ -3,12 +3,11 @@ import os
 from mkdocs_azure_pipelines.ado_pipe_to_md import (
     END_TAG_PATTERN,
     START_TAG_PATTERN,
-    extract_code,
-    extract_parameters,
-    extract_pool,
+    # extract_code,
+    # extract_parameters,
+    # extract_pool,
     extract_section_content,
-    extract_trigger,
-    extract_variables,
+    extract_yaml_section,
     find_tags,
     process_pipeline_file,
 )
@@ -143,7 +142,7 @@ def test_extract_trigger():
 """
     expected_trigger = "```yaml\ntrigger:\n  branches:\n    include:\n      - main # Change this to the branch you want to trigger on\n    exclude:\n      - feature_branches\n```"
 
-    assert extract_trigger(content) == expected_trigger
+    assert extract_yaml_section(content, ["trigger"]) == expected_trigger
 
 
 def test_extract_pool():
@@ -151,7 +150,7 @@ def test_extract_pool():
   vmImage: "ubuntu-latest"
 """
     expected_pool = '```yaml\npool:\n  vmImage: "ubuntu-latest"\n```'
-    assert extract_pool(content) == expected_pool
+    assert extract_yaml_section(content, ["pool"]) == expected_pool
 
 
 def test_extract_variables():
@@ -164,7 +163,7 @@ def test_extract_variables():
     value: "3.8"
 """
     expected_variables = '```yaml\nvariables:\n  - name: tag\n    value: "$(Build.BuildNumber)"\n  - name: ImageName\n    value: "demo Image"\n  - name: python.version\n    value: "3.8"\n```'
-    assert extract_variables(content) == expected_variables
+    assert extract_yaml_section(content, ["variables"]) == expected_variables
 
 
 def test_extract_parameters():
@@ -175,7 +174,7 @@ def test_extract_parameters():
     value: "You did great!"
 """
     expected_parameters = '```yaml\nparameters:\n  - name: python_version\n    value: "3.8"\n  - name: encouraging_message\n    value: "You did great!"\n```'
-    assert extract_parameters(content) == expected_parameters
+    assert extract_yaml_section(content, ["parameters"]) == expected_parameters
 
 
 def test_extract_code():
@@ -199,7 +198,7 @@ def test_extract_code():
     name: output_encouraging_message
 """
     expected_code = '```yaml\nsteps:\n  - task: UsePythonVersion@0\n    inputs:\n      versionSpec: ${{ parameters.python_version }}\n      addToPath: true\n      architecture: "x64"\n  - bash: |\n      python -m pip install --upgrade pip\n      pip install -r requirements.txt\n    displayName: "Install dependencies"\n  - bash: |\n      pip install pytest pytest-azurepipelines\n      pytest\n    displayName: "Run pytest"\n  - bash: |\n      echo "##vso[task.setvariable variable=encouraging_message, isOutput=true]${{ parameters.encouraging_message }}"\n    displayName: "Output encouraging message"\n    name: output_encouraging_message\n```'
-    assert extract_code(content) == expected_code
+    assert extract_yaml_section(content, ["steps", "jobs", "stages"]) == expected_code
 
 
 def test_process_pipeline_file_with_trigger_pool_variables(tmp_path):
@@ -316,11 +315,11 @@ def test_process_pipeline_file_without_title(tmp_path):
 def test_malformed_yaml_extractors():
     """Test that YAML extraction functions return None for malformed YAML."""
     malformed_content = "not: valid: yaml: :"
-    assert extract_parameters(malformed_content) is None
-    assert extract_trigger(malformed_content) is None
-    assert extract_pool(malformed_content) is None
-    assert extract_variables(malformed_content) is None
-    assert extract_code(malformed_content) is None
+    assert extract_yaml_section(malformed_content, ["parameters"]) is None
+    assert extract_yaml_section(malformed_content, ["trigger"]) is None
+    assert extract_yaml_section(malformed_content, ["pool"]) is None
+    assert extract_yaml_section(malformed_content, ["variables"]) is None
+    assert extract_yaml_section(malformed_content, ["steps", "jobs", "stages"]) is None
 
 
 def test_multiple_section_occurrences():
@@ -342,28 +341,28 @@ def test_empty_yaml_block_parameters():
     """Test extraction when the YAML 'parameters' key exists but is empty."""
     content = "parameters:"
     expected = "```yaml\nparameters:\n```"
-    assert extract_parameters(content) == expected
+    assert extract_yaml_section(content, ["parameters"]) == expected
 
 
 def test_empty_yaml_block_trigger():
     """Test extraction when the YAML 'trigger' key exists but is empty."""
     content = "trigger:"
     expected = "```yaml\ntrigger:\n```"
-    assert extract_trigger(content) == expected
+    assert extract_yaml_section(content, ["trigger"]) == expected
 
 
 def test_empty_yaml_block_pool():
     """Test extraction when the YAML 'pool' key exists but is empty."""
     content = "pool:"
     expected = "```yaml\npool:\n```"
-    assert extract_pool(content) == expected
+    assert extract_yaml_section(content, ["pool"]) == expected
 
 
 def test_empty_yaml_block_variables():
     """Test extraction when the YAML 'variables' key exists but is empty."""
     content = "variables:"
     expected = "```yaml\nvariables:\n```"
-    assert extract_variables(content) == expected
+    assert extract_yaml_section(content, ["variables"]) == expected
 
 
 def test_title_generation_from_filename(tmp_path):

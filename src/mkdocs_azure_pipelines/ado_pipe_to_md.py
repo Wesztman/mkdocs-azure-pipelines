@@ -51,76 +51,24 @@ def extract_section_content(content: str, section_name: str) -> str | None:
     return None
 
 
-def extract_yaml_field(content: str, field: str) -> str | None:
+def extract_yaml_section(content: str, fields: list[str]) -> str | None:
     """
-    Extract a YAML field from the content and return it as a YAML code block.
-    """
-    try:
-        yaml = get_yaml_instance()
-        data = yaml.load(content)
-        if not data or field not in data:
-            return None
-        stream = StringIO()
-        yaml.dump({field: data[field]}, stream)
-        return f"```yaml\n{stream.getvalue().strip()}\n```"
-    except Exception as e:
-        print(f"Error parsing YAML for field '{field}': {e}")
-        return None
-
-
-def extract_parameters(content: str) -> str | None:
-    """
-    Extract the 'parameters' field from the YAML content.
-    """
-    return extract_yaml_field(content, "parameters")
-
-
-def extract_trigger(content: str) -> str | None:
-    """
-    Extract the 'trigger' field from the YAML content.
-    """
-    return extract_yaml_field(content, "trigger")
-
-
-def extract_resources(content: str) -> str | None:
-    """
-    Extract the 'resources' field from the YAML content.
-    """
-    return extract_yaml_field(content, "resources")
-
-
-def extract_pool(content: str) -> str | None:
-    """
-    Extract the 'pool' field from the YAML content.
-    """
-    return extract_yaml_field(content, "pool")
-
-
-def extract_variables(content: str) -> str | None:
-    """
-    Extract the 'variables' field from the YAML content.
-    """
-    return extract_yaml_field(content, "variables")
-
-
-def extract_code(content: str) -> str | None:
-    """
-    Extract code sections from the YAML content using one of the keys:
-    'steps', 'jobs', or 'stages'.
+    Extract the first found field from a list of possible fields in the YAML content.
+    Returns the content in a YAML code block.
     """
     try:
         yaml = get_yaml_instance()
         data = yaml.load(content)
         if not data:
             return None
-        for key in ["steps", "jobs", "stages"]:
-            if key in data:
+        for field in fields:
+            if field in data:
                 stream = StringIO()
-                yaml.dump({key: data[key]}, stream)
+                yaml.dump({field: data[field]}, stream)
                 return f"```yaml\n{stream.getvalue().strip()}\n```"
         return None
     except Exception as e:
-        print(f"Error parsing YAML for code: {e}")
+        print(f"Error parsing YAML for '{fields}': {e}")
         return None
 
 
@@ -176,15 +124,15 @@ def process_pipeline_file(input_file: str) -> str | None:
             )
 
     # Extract and add additional YAML fields
-    for extractor, header in [
-        (extract_trigger, "Triggers"),
-        (extract_resources, "Resources"),
-        (extract_pool, "Pool"),
-        (extract_variables, "Variables"),
-        (extract_parameters, "Parameters"),
-        (extract_code, "Code"),
+    for fields, header in [
+        (["trigger"], "Triggers"),
+        (["resources"], "Resources"),
+        (["pool"], "Pool"),
+        (["variables"], "Variables"),
+        (["parameters"], "Parameters"),
+        (["steps", "jobs", "stages"], "Code"),
     ]:
-        result = extractor(content)
+        result = extract_yaml_section(content, fields)
         if result is not None:
             markdown_content += f"## {header}\n\n{result}\n\n"
 
